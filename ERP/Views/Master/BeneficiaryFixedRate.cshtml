@@ -1,0 +1,37 @@
+﻿@model BObject.Master_Rate
+@{
+    ViewBag.Title = "Beneficiary Fixed Rate";
+}
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("BeneficiaryFixedRate", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.CM_ID)
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Beneficiary Contribution Amount</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.bf_rate, new { @class = "form-control", @type = "number", @placeholder = "Beneficiary Contribution Amount" })
+
+        </div>
+        <div class="col-md-3">
+            <label>Form Amount</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.fr_rate, new { @class = "form-control", @type = "number", @placeholder = "Form Amount" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-9">
+            @*<a href="/Master/ItemList">
+                    <img src="~/Logo/back.png" width="20" height="20" />
+                    Back To List
+                </a>*@
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/BeneficiaryFixedRate.js"></script>

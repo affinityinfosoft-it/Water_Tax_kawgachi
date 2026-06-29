@@ -1,0 +1,133 @@
+﻿@model BObject.PartyTax_PT
+@{
+    ViewBag.Title = "Water Tax Collection";
+}
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("ConsumerPayment", "Transaction", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.PM_PartyName)
+    @Html.HiddenFor(m => m.PT_ID)
+    @Html.HiddenFor(m => m.f_date)
+    @Html.HiddenFor(m => m.s_date)
+    @Html.HiddenFor(m => m.t_date)
+    @Html.HiddenFor(m => m.f_amt)
+    @Html.HiddenFor(m => m.s_amt)
+    @Html.HiddenFor(m => m.t_amt)
+    @Html.HiddenFor(m => m.PT_CurDate)
+   
+    
+
+    <input type="hidden" id="DueTaxTotalMonth" />
+
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-3">
+            <label>Recept No</label>
+            @Html.TextBoxFor(m => m.PT_RcptNo, new { @class = "form-control", @placeholder = "Consumer Id", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Rcpt Date</label>
+            @Html.TextBoxFor(m => m.PT_PmtDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date", @onchange = "RecptDateOnchange();" })
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <label>Consumer Id</label><span style="color:red;">*</span>
+            @Html.TextBoxFor(m => m.PL_PartyCode, new { @class = "form-control", @placeholder = "Consumer Id", @onchange = "SearchByPartyCode();" })
+        </div>
+        <div class="col-md-3">
+            <label>Party Name</label><span style="color:red;">*</span>
+            @Html.DropDownListFor(m=>m.PM_PartyCode, null, "Select Consumer", new { @class = "form-control select2 ", required = "required", @onchange = "SearchByPartyName();" })
+
+        </div>
+        <div class="col-md-3">
+            <label>Consumer Father/Husband Name</label>
+            @Html.TextBoxFor(m => m.PM_FHName, new { @class = "form-control", @placeholder = "Consumer F/H Name", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Area Name</label>
+            @Html.TextBoxFor(m => m.AM_AreaName, new { @class = "form-control", @placeholder = "Area Name", disabled = "true" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Para</label>
+            @Html.TextBoxFor(m => m.PM_ParaName, new { @class = "form-control", @placeholder = "Para", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Mobile No</label>
+            @Html.TextBoxFor(m => m.PM_MobNo, new { @class = "form-control", @placeholder = "Mobile No", disabled = "true" })
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <label>Tax Paid Up To</label>
+            @Html.TextBoxFor(m => m.PT_DtTos, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Tax Paid Up To", style = "color:red", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Tax Due From</label>
+            @Html.TextBoxFor(m => m.PT_DtFrom, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Tax Due To</label>
+            @Html.TextBoxFor(m => m.PT_DtTo, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>No Of Due Month</label>
+            <input type="text" style = "color:red", class="form-control" id="NoOfDueMth" disabled />
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <label>Tax Payment From</label>
+            <input type="date" class="form-control" id="TaxPaymentFrom" disabled />
+        </div>
+        <div class="col-md-3">
+            <label>Tax Payment To</label>
+            <input type="date" class="form-control" id="TaxPaymentTo"  disabled/>
+        </div>
+        <div class="col-md-3">
+            <label>No Of Pay Month</label><span style="color:red;">*</span>
+            <input type="text" class="form-control" id="NoOfDuePayMth" onkeyup="OnchangeMonthCalByMonth()" />
+        </div>
+        <div class="col-md-3">
+            <label>Amount</label>
+            @Html.TextBoxFor(m => m.PT_Amount, new { @class = "form-control", @placeholder = "Amount"})
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <br />
+            <a href="/Transaction/WaterTaxCollectionList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-3">
+            <br />
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" id="btnInsUp" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $('.select2').select2();
+    minimumInputLength: 3
+</script>
+
+<script src="~/Scripts/AppScript/WaterTaxCollection.js"></script>

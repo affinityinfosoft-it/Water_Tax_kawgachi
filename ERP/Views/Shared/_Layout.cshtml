@@ -1,0 +1,146 @@
+﻿@using BLogic;
+@using BObject;
+
+@*@{ Layout layout = new BObject.Layout();
+    Service service = new Service();
+    layout = service.GetGlobalSelectOne<Layout>("Layout", "IsActive", 1);
+    ViewBag.Head = layout.Head;
+}*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        @ViewBag.Title - WaterTax Management System
+    </title>
+    <link rel="icon" href="~/Logo/Title.png">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/Toast/toastr.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="~/Content/sweetalert/sweetalert-dev.js"></script>
+    <style>
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgb(255 255 255);
+        }
+    </style>
+    <link href="~/Content/Loader.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="loader" id="AjaxLoader" style="display:none;">
+        <div class="strip-holder">
+            <div class="strip-1"></div>
+            <div class="strip-2"></div>
+            <div class="strip-3"></div>
+        </div>
+    </div>
+    <header class="section-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xl-12 col-sm-12 row-cols-sm-auto">
+                    <span><b style="font-size: 27px; color: #0d6efd">Water Tax Collection</b></span>
+
+                    <div style="float: right;">
+                        <span>
+                            <select id="CMID" onchange="CompanyOnchange();" class="form-control" style="color: #0d6efd">
+                                @foreach (var item in ViewBag.CompanyList)
+                                {
+                                    if (item.CM_ID == ViewBag.CMID)
+                                    {
+                    <option value="@item.CM_ID" selected>@item.name</option> }
+                                    else
+                                    {
+                    <option value="@item.CM_ID">@item.name</option>}
+                                }
+                            </select>
+                        </span>
+                        @*<span class="link-danger">@HttpContext.Current.User.Identity.Name</span>*@
+                    </div>
+                    @*<div style="float: right;">
+                            <span>
+                                <a href="javascript:void(0)" class="active" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#Logoutmodal">
+                                    <img src="~/Logo/logout.png" style="width:40px;height:40px;" />
+                                </a>
+                            </span>
+                            <span class="link-danger">@HttpContext.Current.User.Identity.Name</span>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <!-- ============= NAVBAR COMPONENT ============== -->
+        @Html.Partial("_PartialNavbarMenu")
+        <!-- =============NAVBAR COMPONENT END// ============== -->
+        <div class="shadow-lg p-3 mb-5 bg-body" style="border: #008eff solid; ">
+            @RenderBody()
+            @Html.Partial("_PartialFooter")
+        </div>
+    </div>
+    <!-- Modal -->
+    @Html.Partial("_PartialExtensionLayoutModal")
+    <!-- Modal -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>*@
+    <script src="~/Content/Toast/toastr.js"></script>
+    <script>
+        //$(document)
+        //    .ajaxStart(function () {
+        //        $('#AjaxLoader').show();
+        //    })
+        //    .ajaxStop(function () {
+        //        $('#AjaxLoader').hide();
+        //    });
+        //function menuClick() {
+        //    $('.loader').css('display', '');
+        //}
+
+        $(window).on('load', function () {
+            $('#AjaxLoader').show();
+            setTimeout(function () {
+                $('#AjaxLoader').hide();
+            }, 500);
+        })
+        function CompanyOnchange() {
+            var obj = {
+                CM_ID: $('#CMID').val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Admin/ChangeCompanyAndSessionBind",
+                data: JSON.stringify(obj),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: "true",
+                cache: "false",
+                success: function (data) {
+                    if (data.IsSuccess == true) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        function Calltoastrsuccessredirectanotherpage( messages,  redirectpage)
+        {
+            toastr.success("<br /><button type='button' id='confirmationButtonYes' class='btn btn-info' style='margin-left: 197px;'>Ok</button>", messages,
+                {
+                    closeButton: false,
+                    allowHtml: true,
+                    onShown: function (toast) {
+                        $("#confirmationButtonYes").click(function () {
+                            window.location.href = redirectpage;
+                        });
+                    }
+                });
+        }
+
+    </script>
+
+</body>
+</html>

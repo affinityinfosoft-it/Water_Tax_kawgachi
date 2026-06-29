@@ -1,0 +1,47 @@
+﻿
+@model BObject.VanMaster_VM
+@{ ViewBag.Title = "Van"; }
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("Van", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.VM_ID)
+    <div class="row">
+        <div class="col-md-3">
+            <label>Van Code</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.VM_VanCode, new { @class = "form-control", @placeholder = "Van Code" })
+        </div>
+        <div class="col-md-3">
+            <label>Van Name</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.VM_VanName, new { @class = "form-control", @placeholder = "Van Name" })
+        </div>
+        <div class="col-md-3">
+            <label>Van Type</label><span style="color:red">*</span>
+                                   <select class="form-control" id="VM_Type">
+                                       <option value="Select">Select</option>
+                                       <option value="Public">Public</option>
+                                       <option value="Commercial">Commercial</option>
+                                       <option value="Others">Others</option>
+
+                                   </select>
+        </div>
+        <div class="col-md-3">
+            <label>Van Rate</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.VM_Rate, new { @class = "form-control", @placeholder = "Van Rate" })
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-9">
+            <a href="/Master/VanList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/Van.js"></script>

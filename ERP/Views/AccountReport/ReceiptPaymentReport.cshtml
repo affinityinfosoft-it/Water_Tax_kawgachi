@@ -1,0 +1,453 @@
+﻿@model BObject.AccountModel.vw_AccountLedger
+@{
+    ViewBag.Title = "Receipt Payment Report";
+}
+<div class="page-body-height">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+    @using (Html.BeginForm("ReceiptPaymentReport", "AccountReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "FormSubmit", name = "FormSubmit", @class = "", role = "form", autocomplete = "off" }))
+    {
+
+        <input id="btnAddEnable" name="btnAddEnable" type="hidden" value="0" />
+        <input id="btnEditEnable" name="btnEditEnable" type="hidden" value="0" />
+        <input id="btnViewEnable" name="btnViewEnable" type="hidden" value="0" />
+        <input id="btnDeleteEnable" name="btnDeleteEnable" type="hidden" value="0" />
+        <input id="hdnPaymentId" name="hdnPaymentId" type="hidden" value="0" />
+        <div class="row">
+            <div class="col-md-11">
+            </div>
+            <div class="col-md-1">
+                @*<a id="btnBack" class="btnBack" href="@Url.Action("studentlist", "home")">Back<i class="ui-icon ui-icon-arrowreturnthick-1-w"></i></a>*@
+            </div>
+        </div>
+        @*<div class="clearfix"></div>*@
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="txtFdate">Form Date</label>
+                    <input id="txtFdate" name="txtFdate" class="form-control date" value="" placeholder="DD/MM/YYYY" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="txtTdate">To Date</label>
+                    <input id="txtTdate" name="txtTdate" class="form-control date" value="" placeholder="DD/MM/YYYY" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <div style="height:20px;"></div>
+                    <input type="button" id="btnSubmit" class="btn btn-info" value="View" onclick="javascript: RedirectUrl();">
+                </div>
+            </div>
+
+        </div>
+    <div class="row col-lg-12 form-group">
+        @if (Model.vw_AccountLedgerList.Count() > 0)
+        {
+            decimal TotalReceiptAmount = 0;
+            decimal TotalPaymentAmount = 0;
+            int count = 0;
+            var PaymentCount = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 1).Count();
+            var ReceiptCount = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).Count();
+
+            var PaymentList = new List<BObject.AccountModel.vw_AccountLedger>();
+            var ReceiptList = new List<BObject.AccountModel.vw_AccountLedger>();
+            List<BObject.AccountModel.vw_AccountLedger> List = null;
+            BObject.AccountModel.vw_AccountLedger obj = new BObject.AccountModel.vw_AccountLedger();
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 1).Where(a => a.AM_AccountCode != "BK").Where(a => a.AM_AccountCode != "CA").ToList();
+            if (List.Count() > 0)
+            {
+
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            PaymentList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            PaymentCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.LD_DrAmount;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.LD_DrAmount).Sum();
+                        }
+                        PaymentList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.LD_DrAmount;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        PaymentList.Add(obj);
+                    }
+
+
+                }
+
+                BObject.AccountModel.vw_AccountLedger CloseAccount = new BObject.AccountModel.vw_AccountLedger();
+                CloseAccount.SAM_SubDescription = "Closeing Balance";
+                PaymentList.Add(CloseAccount);
+                PaymentCount += 1;
+
+            }
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 1).Where(a => a.AM_AccountCode == "BK").ToList();
+            if (List.Count() > 0)
+            {
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            PaymentList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            PaymentCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.CloseingBalance;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.CloseingBalance).Sum();
+                        }
+                        PaymentList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.CloseingBalance;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        PaymentList.Add(obj);
+                    }
+
+
+                }
+            }
+
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 1).Where(a => a.AM_AccountCode == "CA").ToList();
+            if (List.Count() > 0)
+            {
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            PaymentList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            PaymentCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.CloseingBalance;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.CloseingBalance).Sum();
+                        }
+                        PaymentList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.CloseingBalance;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        PaymentList.Add(obj);
+                    }
+
+
+                }
+            }
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).ToList();
+            if (Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).Count() > 0)
+            {
+                BObject.AccountModel.vw_AccountLedger OpeningAccount = new BObject.AccountModel.vw_AccountLedger();
+                OpeningAccount.SAM_SubDescription = "Opening Balance";
+                ReceiptList.Add(OpeningAccount);
+                ReceiptCount += 1;
+            }
+
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).Where(a => a.AM_AccountCode == "CA").ToList();
+            if (List.Count() > 0)
+            {
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            ReceiptList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            ReceiptCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.OpeningBalance;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.OpeningBalance).Sum();
+                        }
+                        ReceiptList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.OpeningBalance;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        ReceiptList.Add(obj);
+                    }
+
+
+                }
+            }
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).Where(a => a.AM_AccountCode == "BK").ToList();
+            if (List.Count() > 0)
+            {
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            ReceiptList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            ReceiptCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.OpeningBalance;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.OpeningBalance).Sum();
+                        }
+                        ReceiptList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.OpeningBalance;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        ReceiptList.Add(obj);
+                    }
+
+
+                }
+            }
+            List = new List<BObject.AccountModel.vw_AccountLedger>();
+            List = Model.vw_AccountLedgerList.Where(a => a.LD_VoucherTypeId == 2).Where(a => a.AM_AccountCode != "BK").Where(a => a.AM_AccountCode != "CA").ToList();
+            if (List.Count() > 0)
+            {
+                int ISAccountIdForSubId = 0;
+                foreach (var item in List)
+                {
+                    obj = new BObject.AccountModel.vw_AccountLedger();
+                    obj = item;
+                    if (obj.ISSubAc == "Y")
+                    {
+                        if (ISAccountIdForSubId != obj.LD_AccountID)
+                        {
+                            BObject.AccountModel.vw_AccountLedger MainAccount = new BObject.AccountModel.vw_AccountLedger();
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            MainAccount.LD_AccountID = obj.LD_AccountID;
+                            MainAccount.SAM_SubDescription = obj.AM_LongName;
+                            ReceiptList.Add(MainAccount);
+                            ISAccountIdForSubId = obj.LD_AccountID;
+                            ReceiptCount += 1;
+                        }
+                        int LastmainAccountSubId = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Last().LD_SubID;
+                        obj.SubBalance = obj.LD_CrAmount;
+                        if (LastmainAccountSubId == obj.LD_SubID)
+                        {
+                            obj.FinalBalance = List.Where(a => a.LD_AccountID == obj.LD_AccountID).Select(a => a.LD_CrAmount).Sum();
+                        }
+                        ReceiptList.Add(obj);
+
+                    }
+                    else
+                    {
+                        obj.FinalBalance = obj.LD_CrAmount;
+                        obj.SAM_SubDescription = obj.AM_LongName;
+                        ReceiptList.Add(obj);
+                    }
+
+
+                }
+            }
+
+            if (ReceiptCount > PaymentCount)
+            {
+                count = ReceiptCount;
+            }
+            else
+            {
+                count = PaymentCount;
+            }
+            <table class="table table-bordered" id="tbl">
+                <thead>
+                    @*<tr>
+                        <th colspan="6" style="text-align:center">@Model.vw_AccountLedgerList.FirstOrDefault().CollegeName</th>
+                    </tr>*@
+                    <tr>
+                        <th colspan="6" style="text-align:center">Receipt Payment Report</th>
+                    </tr>
+                    @*<tr>
+                        <th colspan="6" style="text-align:center">@("SessionName-" + Model.vw_AccountLedgerList.FirstOrDefault().SessionName + " :: Form Date-" + ViewBag.FDate + " :: To Date-" + ViewBag.TDate)</th>
+                    </tr>*@
+                    <tr>
+                        <th>Receipt</th>
+                        <th>Amount(Rs.)</th>
+                        <th>Amount(Rs.)</th>
+                        <th>Payment</th>
+                        <th>Amount(Rs.)</th>
+                        <th>Amount(Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int i = 0; i < count; i++)
+                    {
+
+
+                        <tr>
+                            @if (ReceiptCount > i)
+                            {
+                                TotalReceiptAmount += Math.Round(ReceiptList[i].FinalBalance, 2);
+                                if (ReceiptList[i].SubBalance.ToString() == "0" && ReceiptList[i].FinalBalance.ToString() == "0")
+                                {
+                                    <td><strong>@(ReceiptList[i].SAM_SubDescription)</strong> </td>
+                                }
+                                else
+                                {
+                                    <td>@(ReceiptList[i].SAM_SubDescription)</td>
+                                }
+                                <td style="text-align:right;">@(ReceiptList[i].SubBalance.ToString() == "0" ? "" : Math.Round(ReceiptList[i].SubBalance, 2).ToString())</td>
+                                <td style="text-align:right;">@(ReceiptList[i].FinalBalance.ToString() == "0" ? "" : Math.Round(ReceiptList[i].FinalBalance, 2).ToString())</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
+                            @if (PaymentCount > i)
+                            {
+                                TotalPaymentAmount += Math.Round(PaymentList[i].FinalBalance, 2);
+                                if (PaymentList[i].SubBalance.ToString() == "0" && PaymentList[i].FinalBalance.ToString() == "0")
+                                {
+                                    <td><strong>@(PaymentList[i].SAM_SubDescription)</strong> </td>
+                                }
+                                else
+                                {
+                                    <td>@(PaymentList[i].SAM_SubDescription)</td>
+                                }
+
+                                <td style="text-align:right;">@(PaymentList[i].SubBalance.ToString() == "0" ? "" : Math.Round(PaymentList[i].SubBalance, 2).ToString())</td>
+                                <td style="text-align:right;">@(PaymentList[i].FinalBalance.ToString() == "0" ? "" : Math.Round(PaymentList[i].FinalBalance, 2).ToString())</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
+
+                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>@TotalReceiptAmount</td>
+                        <td></td>
+                        <td></td>
+                        <td>@TotalPaymentAmount</td>
+                    </tr>
+                </tbody>
+            </table>
+            <center>
+                <input type="button" class="RoundButtonExport" onclick="tableToExcel('tbl', 'Result')" value="Export to Excel" />
+            </center>
+        }
+
+    </div>
+
+
+
+        @*<div class="row">
+                <h2 class="enquiry-s-b-information">Total Opening Details:</h2>
+            </div>*@
+
+
+         <script src="~/Scripts/jquery-latest_export_excel.min.js"></script>
+        <script type="text/javascript">
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
+            $(document).ready(function () {
+                $('.date').datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: '01/01/1950',
+                    yearRange: "-100:+0",
+                    maxDate: '+0D'
+                });
+            });
+            function RedirectUrl() {
+                @*var FYId = $.trim(@ViewBag.SessionId);*@
+                var FYId = 2022;
+                var FDate = $.trim($("#txtFdate").val());
+                var TDate = $.trim($("#txtTdate").val());
+                window.location.href = "/AccountReport/ReceiptPaymentReport?FYId=" + FYId + "&FDate=" + FDate + "&TDate=" + TDate;
+            }
+        </script>
+
+    }
+</div>

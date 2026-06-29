@@ -1,0 +1,278 @@
+﻿@model BObject.RepReConnection
+
+@{
+    ViewBag.Title = "Re Connection";
+}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    .select2-container .select2-selection--single {
+        height: 36px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 5px !important;
+    }
+</style>
+<style>
+    .tableFixHead {
+        overflow-y: auto;
+        height: 206px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+        }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+    }
+
+    th {
+        background: #eee;
+    }
+</style>
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("ReConnection", "Transaction", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.GS_SIID)
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Bill No</label>
+            @Html.TextBoxFor(m => m.GS_BillNo, new { @class = "form-control", @placeholder = "Bill No", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Bill Date</label>
+            @Html.TextBoxFor(m => m.GS_BillDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date" })
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <label>Consumer Id</label><span style="color:red;">*</span>
+            @Html.TextBoxFor(m => m.PL_PartyCode, new { @class = "form-control", @placeholder = "Consumer Id", @onchange = "SearchByPartyCode();" })
+        </div>
+        <div class="col-md-3">
+            <label>Party Name</label>
+            @Html.DropDownList("PM_PartyCode", null, "Select Consumer", new { @class = "form-control select2 ", required = "required", @onchange = "SearchByPartyName();" })
+        </div>
+        @*<div class="col-md-3">
+            <label>Name Of Inspector</label>
+            @Html.DropDownList("Ins_Id", null, "Select Name Of Inspector", new { @class = "form-control", required = "required" })
+        </div>*@
+
+        <div class="col-md-3">
+            <label>Consumer Father/Husband Name</label>
+            @Html.TextBoxFor(m => m.PM_FHName, new { @class = "form-control", @placeholder = "Consumer F/H Name", disabled = "true" })
+        </div>
+		
+	    <div class="col-md-3">
+            <label>Area Name</label>
+            @Html.TextBoxFor(m => m.AM_AreaName, new { @class = "form-control", @placeholder = "Area Name", disabled = "true" })
+        </div>
+    </div>
+    <div class="row">
+	        <div class="col-md-3">
+        </div>
+        @*<div class="col-md-3">
+            <label>Area Name</label>
+            @Html.TextBoxFor(m => m.AM_AreaName, new { @class = "form-control", @placeholder = "Area Name", disabled = "true" })
+        </div>*@
+        <div class="col-md-3">
+            <label>Para</label>
+            @Html.TextBoxFor(m => m.PM_ParaName, new { @class = "form-control", @placeholder = "Para", disabled = "true" })
+        </div>
+        <div class="col-md-3">
+            <label>Contact No</label>
+            @Html.TextBoxFor(m => m.PM_MobNo, new { @class = "form-control", @placeholder = "Contact No", disabled = "true" })
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tableFixHead">
+                <table id="tableReConnection">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="form-check-input" id="chkAll" /></th>
+                            <th style="display:none"></th>
+                            <th style="display:none"></th>
+                            <th>Item Name</th>
+                            <th>Oty</th>
+                            <th width="1">Unit</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Vat</th>
+                            <th>Tax Amt</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.RepReItemList)
+                        {
+                        <tr>
+                            @if (Model.GS_SIID != 0)
+                            {
+                        <td><input type="checkbox" class="form-check-input" value="@item.IM_ItemCode" id="chk_@item.IM_ItemCode" onchange="ChkOnChange('@item.IM_ItemCode');" checked /></td> }
+                                            else
+                                            {
+                        <td><input type="checkbox" class="form-check-input" value="@item.IM_ItemCode" id="chk_@item.IM_ItemCode" onchange="ChkOnChange('@item.IM_ItemCode');" /></td>}
+                            <td style="display:none"><input value="@item.GS_BillNo" id="GS_BillNo_@item.IM_ItemCode" disabled /></td>
+                            <td style="display:none"><input value="@item.GS_SIID" id="GS_SIID_@item.IM_ItemCode" disabled /></td>
+                            <td><input value="@item.IM_ItemName" id="IName_@item.IM_ItemCode" disabled /></td>
+                            <td><input value="@item.GS_Qty" id="GS_Qty_@item.IM_ItemCode" onkeyup="QtyOnkeyUp('@item.IM_ItemCode');" disabled /></td>
+                            <td width="1"><input style="width:90px;" value="@item.IM_Unit" id="GS_Qty_item.IM_ItemCode" disabled /></td>
+                            <td><input value="@item.IM_Rate" id="IM_Rate_@item.IM_ItemCode" /></td>
+                            <td><input value="@item.GS_Amount" id="GS_NetAmt_@item.IM_ItemCode" disabled /></td>
+                            <td><input value="@item.GS_Vat" id="GS_Vat_@item.IM_ItemCode" disabled /></td>
+                            <td><input value="@item.GS_VatAmt" id="GS_VatAmt_@item.IM_ItemCode" disabled /></td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                    <label>Metal Road :</label>
+                </div>
+                <div class="col-md-3">
+                    <label>Quantity</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>Positiomn</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Break Road :</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Earth Road :</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-3">
+                    <label>Total Amt :</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Gross Amt</label>
+                    @Html.TextBoxFor(m => m.GS_GrossAmt, new { @class = "form-control", @placeholder = "Gross Amount", disabled = "true" })
+                </div>
+                <div class="col-md-3">
+                    <label>Tax Amt</label>
+                    @Html.TextBoxFor(m => m.TaxAmt, new { @class = "form-control", @placeholder = "Gross Amount", disabled = "true" })
+                </div>
+                <div class="col-md-3">
+                    <label>Adj Amt(+)</label>
+                    @Html.TextBoxFor(m => m.GS_AdjAmt, new { @type = "number", @class = "form-control", @placeholder = "Gross Amount", onkeyup = "OnchangeAdjDAmmttplus();" })
+                </div>
+                <div class="col-md-3">
+                    <label>Adj Amt(-)</label>
+                    <input type="number" class="form-control" onkeyup="OnchangeAdjDAmmttminus();" id="AdjDAmount" />
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                </div>
+                <div class="col-md-3">
+                    <label>Net Amt</label>
+                    @Html.TextBoxFor(m => m.GS_NetAmt, new { @class = "form-control", @placeholder = "", disabled = "true" })
+                </div>
+                <div class="col-md-3">
+                    <label>Paid Amt</label>
+                    @Html.TextBoxFor(m => m.GS_Paid, new { @class = "form-control", @placeholder = "", onkeyup = "OnchangePaidAmt();" })
+                </div>
+                <div class="col-md-3">
+                    <label>Due Amt</label>
+                    @Html.TextBoxFor(m => m.GS_Due, new { @class = "form-control", @placeholder = "", style = "color:red", disabled = "true" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <br />
+            <a href="/Transaction/ReConnectionList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-3">
+            <br />
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" id="btnInsUp" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $('.select2').select2();
+    minimumInputLength: 3
+</script>
+
+<script src="~/Scripts/AppScript/ReConnection.js"></script>

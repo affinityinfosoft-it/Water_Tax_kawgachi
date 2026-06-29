@@ -1,0 +1,175 @@
+﻿@model BObject.AccessRights
+@using BObject;
+@using ERP.DataAccess;
+@{
+    ViewBag.Title = "Access Right";
+    var MList = Model.MenuList;
+    List<AccessRights> menuList = MList;
+
+}
+@Styles.Render("~/Content/Treeview")
+@using (Html.BeginForm("AccessRight", "Admin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    <h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+    if ((bool)Session["CanView"] == true)
+    {
+         if ((bool)Session["CanEdit"] == true)
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <label>Select Role<span style="color:red">*</span></label>
+                @Html.DropDownList("RoleId", null, "Select User Role", new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+}
+        <hr />
+        <div class="content">
+            <ul class="tree">
+                @foreach (var mp in menuList.Where(p => p.IsBaseMenu == true || p.IsMenu == true && p.IsSubMenu == false))
+                {
+                    if (mp.IsMenu == true)
+                    {
+                        if (mp.CanView == true)
+                        {
+                            <li><a href="javascript(void)" class="btn btn-primary" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@mp.MenuId);">@mp.MenuName</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="javascript(void)" class="btn btn-danger" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@mp.MenuId);">@mp.MenuName</a></li>
+                        }
+                    }
+                    else if (mp.IsBaseMenu == true && mp.IsSubMenu == false)
+                    {
+                        <li>
+                            @if (mp.CanView == true)
+                            {
+                                <a class="btn btn-primary" href="javascript(void)" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@mp.MenuId);">@mp.MenuName</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" href="javascript(void)" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@mp.MenuId);">@mp.MenuName</a>
+                            }
+                            @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+                            {
+                                @:<ul>
+                    }
+                            @RenderMenuItem(menuList, mp)
+                            @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+                            {
+                                @:</ul>
+                    }
+                    @*<ul>
+                            <li>
+                                <a>1st Child of 3</a>
+                                <ul>
+                                    <li><a>1st grandchild</a></li>
+                                    <li><a>2nd grandchild</a></li>
+                                </ul>
+                            </li>
+                            <li><a>2nd Child of 3</a></li>
+                            <li><a>3rd Child of 3</a></li>
+                        </ul>*@
+                </li>
+                    }
+
+                }
+            </ul>
+        </div>
+        @helper RenderMenuItem(List<AccessRights> menuList, AccessRights mi)
+{
+    foreach (var cp in menuList.Where(p => p.ParentMenuId == mi.MenuId))
+    {
+        if (cp.IsSubMenu == true && cp.IsBaseMenu == false)
+        {
+            if (cp.CanView)
+            {
+                <li><a href="javascript(void)" class="btn btn-primary" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@cp.MenuId);"> @cp.MenuName </a></li>
+            }
+            else
+            {
+                <li><a href="javascript(void)" class="btn btn-danger" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@cp.MenuId);"> @cp.MenuName </a></li>
+            }
+        }
+        else
+        {
+            @:<li>
+            if (cp.CanView)
+            {
+                <a href="javascript(void)" class="btn btn-primary" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@cp.MenuId);"> @cp.MenuName</a>
+            }
+            else
+            {
+                <a href="javascript(void)" class="btn btn-danger" title="Click For Access Right Change" data-bs-toggle="modal" data-bs-target="#AccessRightModal" onclick="MenuOnclickAccess(@cp.MenuId);"> @cp.MenuName</a>
+            }
+        }
+        if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+        {
+            @:<ul>
+        }
+        @RenderMenuItem(menuList, cp)
+        if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+        {
+            @:</ul>
+        }
+        else
+        {
+            @:</li>
+        }
+    }
+}
+        <div class="modal fade" id="AccessRightModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Access Right Update List</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <table class="table" id="AccessRightTable">
+                                <thead>
+                                    <tr>
+                                        <th hidden></th>
+                                        <th>Menu Name</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanViewSelect" onclick="CanViewSelectAllOnClick();" />CanView</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanAddSelect" onclick="CanAddSelectAllOnClick();" />CanAdd</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanEditSelect" onclick="CanEditSelectAllOnClick();" />CanEdit</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanDeleteSelect" onclick="CanDeleteSelectAllOnClick();" />CanDelete</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanSubmitSelect" onclick="CanSubmitSelectAllOnClick();" />CanSubmit</th>
+                                        <th><input type="checkbox" class="form-check-input" id="CanUpdateSelect" onclick="CanUpdateSelectAllOnClick();" />CanUpdate</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+                        <button type="button" class="btn btn-primary" onclick="InsertUpdateAssignRights();">UPDATE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert-danger">
+    <h3>You Are Not Authorize....................!</h3>
+        </div>
+    }
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/AccessRight.js"></script>
+@if (TempData.ContainsKey("Message"))
+{
+    <script type="text/javascript">
+        //success / error / warning / info
+        toastr.success("@TempData["Message"]")
+    </script>
+}
+<script>
+    $('#RoleId').change(function () {
+        var RoleId = $('#RoleId').val();
+        window.location.href = "/Admin/AccessRight?Id=" + RoleId;
+    });
+</script>

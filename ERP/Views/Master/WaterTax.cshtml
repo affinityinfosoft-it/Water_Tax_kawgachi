@@ -1,0 +1,70 @@
+﻿@model BObject.tax_master
+@{
+    ViewBag.Title = "Water Tax Slab";
+}
+
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+
+@using (Html.BeginForm("WaterTax", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.CM_ID)
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>First Slab Day</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.f_date, new { @class = "form-control", @type = "number", @placeholder = "First Slab Day" })
+
+        </div>
+        <div class="col-md-3">
+            <label>First Slab Tax Amount Rate</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.f_amt, new { @class = "form-control", @type = "number", @placeholder = "Tax Amount Rate" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Second Slab Day</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.s_date, new { @class = "form-control", @type = "number", @placeholder = "Second Slab Day" })
+
+        </div>
+        <div class="col-md-3">
+            <label>Second Slab Tax Amount Rate</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.s_amt, new { @class = "form-control", @type = "number", @placeholder = "Tax Amount Rate" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Third Slab Day</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.t_date, new { @class = "form-control", @type = "number", @placeholder = "Thired Slab Day", disabled = "true" })
+
+        </div>
+        <div class="col-md-3">
+            <label>Third Slab Tax Amount Rate</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.t_amt, new { @class = "form-control", @type = "number", @placeholder = "Tax Amount Rate" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-9">
+            @*<a href="/Master/ItemList">
+                    <img src="~/Logo/back.png" width="20" height="20" />
+                    Back To List
+                </a>*@
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/WaterTax.js"></script>
+
+
+
+
+

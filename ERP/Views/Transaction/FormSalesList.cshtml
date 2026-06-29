@@ -1,0 +1,139 @@
+﻿@model BObject.FORMSALE
+@{ ViewBag.Title = "Form Sale List"; }
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-lg-3">
+        <div class="form-group">
+            <b><label for="fromdate">From Date:</label></b>
+            <input type="date" id="fromdate" name="fromdate" class="form-control DatePick" placeholder="__/__/____" value="@Model.fromdate" />
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <b><label for="fromdate">To Date:</label></b>
+            <input type="date" id="todate" name="todate" class="form-control DatePick" placeholder="__/__/____" value="@Model.todate" />
+        </div>
+    </div>
+    <div class="col-lg-3 ">
+        <div class="form-group">
+            <b><label for="partyname">PartyCode:</label></b>
+            <input type="number" id="PM_PartyCode" name="PM_PartyCode" class="form-control" value="@Model.PM_PartyCode" />
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div style="height:25px"></div>
+        <input style=" width: 225px" type="button" name="btnSearch" value="Show" onclick="fetchData();" id="btnSubmit" class="btn btn-success float-end" />
+    </div>
+</div>
+<br />
+<style>
+    .containers {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .form-controls {
+        color: #fff;
+        background-color: #146c43;
+        border-color: #13653f;
+        float: inline-end;
+    }
+</style>
+@if ((bool)Session["CanAdd"] == true)
+{
+<div class=" containers">
+    <a href="FormSales" style="text-decoration:none; width:225px;" class="btn btn-primary">ADD</a>
+</div>}
+<hr />
+@if ((bool)Session["CanView"] == true)
+{
+<div class="row">
+    <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+        <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+            <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th>Sl.</th>
+                    <th>Party Code</th>
+                    <th>Party Name</th>
+                    <th>Bill No</th>
+                    <th>Bill Date</th>
+                    <th>Paid Amount</th>
+                    <th>Print</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1; }
+                @foreach (var item in Model.FORMSALEList)
+                {
+<tr>
+    <td></td>
+    <td>@i</td>
+    <td>@item.PM_PartyCode</td>
+    <td>@item.PM_PartyName</td>
+    <td>@item.BILLNO</td>
+    <td>@item.BILLDATE.ToShortDateString()</td>
+    <td>@item.AMOUNT</td>
+
+    <td>
+        <a href="/Report/FormSaleReport/@item.ID" target="_blank" style="text-decoration:none;">
+            @*<a href="/Report/ReConnection?GS_BillNo=@item.GS_BillNo" target="_blank" style="text-decoration:none;">
+                <a href="/Report/ConsumerPayment?PL_BillNo=@item.PL_BillNo" target="_blank" style="text-decoration:none;">*@
+
+            <img src="~/Logo/Printer.png" width="30" height="30" title="Print" />
+        </a>
+    </td>
+
+    @if ((bool)Session["CanEdit"] == true)
+    {
+<td>
+    <a href="/Transaction/FormSales/@item.ID" style="text-decoration:none;">
+        <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+    </a>
+</td>
+ }
+else
+{
+<td>
+    <a href="javascript:void(0)" style="text-decoration:none;">
+        <img src="~/Logo/Edit.png" width="30" height="30" title="Edit Not Authorized" />
+    </a>
+</td>
+}
+    @if ((bool)Session["CanDelete"] == true)
+    {
+<td>
+    <a href="javascript:void(0)" onclick="DeleteFormSale(@item.ID);" style="text-decoration:none;">
+        <img src="~/Logo/Delete.png" width="30" height="30" title="Delete" />
+    </a>
+</td>
+ }
+else
+{
+<td>
+    <a href="javascript:void(0)" style="text-decoration:none;">
+        <img src="~/Logo/Delete.png" width="30" height="30" title="Delete Not Authorized" />
+    </a>
+</td>
+}
+
+
+</tr>i = i + 1;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div> }
+else
+{
+<div class="alert-danger">
+    <h3>You Are Not Authorize....................!</h3>
+</div>}
+
+
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/data-table/bootstrap-table.js"></script>
+<script src="~/Scripts/AppScript/FORMSALE.js"></script>

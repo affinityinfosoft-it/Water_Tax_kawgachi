@@ -1,0 +1,91 @@
+﻿@model BObject.ItemMaster_IM
+@{
+    ViewBag.Title = "Item";
+}
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("Item", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.IM_ID)
+<div class="row">
+    <div class="col-md-3">
+        <label>Item Code</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.IM_ItemCode, new { @class = "form-control", @placeholder = "Item Code" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.ItemGroupID, "Item Group")<span style="color:red">*</span>
+        @Html.DropDownListFor(m => m.ItemGroupID, (SelectList)ViewBag.ItemGroupList, "Select Item Group", new { @class = "form-control", id = "ItemGroupID" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.ItemSubGroupID, "Item SubGroup")<span style="color:red">*</span>
+        @Html.DropDownListFor(m => m.ItemSubGroupID, (SelectList)ViewBag.ItemSubGroupList, "Select SubGroup", new { @class = "form-control", required = "required" })
+    </div>
+    <div class="col-md-3">
+        <label>Item Type</label><span style="color:red">*</span>
+        @Html.DropDownListFor(m => m.IM_Type,
+                    new List<SelectListItem> {
+        new SelectListItem { Text = "Materials", Value = "M" },
+        new SelectListItem { Text = "Service", Value = "S" },
+        new SelectListItem { Text = "Others", Value = "O" }
+                                            },
+                    "-- Select Type --",
+                    new { @class = "form-control", id = "IM_Type" })
+    </div>
+
+    <div class="col-md-3">
+        <label>Item Name</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.IM_ItemName, new { @class = "form-control", @placeholder = "Item Name" })
+    </div>
+    <div class="col-md-3">
+        <label>Item Description</label>
+        @Html.TextBoxFor(m => m.IM_ItemDescription, new { @class = "form-control", @placeholder = "Item Name" })
+    </div>
+    <div class="col-md-3">
+        <label>Unit Of Measurement</label><span style="color:red">*</span>
+        <select class="form-control" id="IM_Unit" name="IM_Unit">
+            <option value="">-- Select Unit --</option>
+            <option value="pcs" @(Model.IM_Unit == "pcs" ? "selected" : "")>Pcs</option>
+            <option value="ft" @(Model.IM_Unit == "ft" ? "selected" : "")>Ft</option>
+            <option value="lt" @(Model.IM_Unit == "lt" ? "selected" : "")>Ltr.</option>
+            <option value="kg" @(Model.IM_Unit == "kg" ? "selected" : "")>Kg</option>
+            <option value="cft" @(Model.IM_Unit == "cft" ? "selected" : "")>Cft</option>
+            <option value="cm" @(Model.IM_Unit == "cm" ? "selected" : "")>Cm</option>
+            <option value="inch" @(Model.IM_Unit == "inch" ? "selected" : "")>Inch</option>
+            <option value="sqmtr" @(Model.IM_Unit == "sqmtr" ? "selected" : "")>Sqmtr</option>
+            <option value="pkt" @(Model.IM_Unit == "pkt" ? "selected" : "")>Packet</option>
+            <option value="coil" @(Model.IM_Unit == "coil" ? "selected" : "")>Coil</option>
+            <option value="box" @(Model.IM_Unit == "box" ? "selected" : "")>Box</option>
+            <option value="day" @(Model.IM_Unit == "day" ? "selected" : "")>Day</option>
+            <option value="hr" @(Model.IM_Unit == "hr" ? "selected" : "")>Hours</option>
+            <option value="other" @(Model.IM_Unit == "other" ? "selected" : "")>Others</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        @*@Html.LabelFor(m => m.IM_GST, new { @class = "form-label" })<span style="color:red">*</span>*@
+        <label>GST</label>
+        @Html.TextBoxFor(m => m.IM_GST, new { @class = "form-control", @placeholder = "GST %", required = "required" })
+    </div>
+    <div class="col-md-3">
+        <label>Item Rate</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.IM_Rate, new { @class = "form-control", @placeholder = "Item Rate" })
+    </div>
+    <div class="col-md-3">
+        <label>Stock in Hand</label>
+        @Html.TextBoxFor(m => m.IM_StockInHand, new { @class = "form-control", @placeholder = "Stock in Hand (Pcs)" })
+    </div>
+</div>
+<br />
+    <div class="row">
+        <div class="col-md-9">
+            <a href="/Master/ItemList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/Item.js"></script>

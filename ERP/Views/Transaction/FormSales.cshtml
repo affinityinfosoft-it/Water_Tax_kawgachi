@@ -1,0 +1,96 @@
+﻿@model BObject.FORMSALE
+@{
+    ViewBag.Title = "Form Sale";
+}
+<style>
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 0px !important;
+    }
+</style>
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("ConsumerPayment", "Transaction", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.ID)
+    <div class="row">
+        <div class="col-md-3">
+            <label>Rcpt Date</label>
+            @Html.TextBoxFor(m => m.BILLDATE, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date" })
+        </div>
+        <div class="col-md-3">
+            <label>Consumer Id</label><span style="color:red;">*</span>
+            @Html.TextBoxFor(m => m.PL_PartyCode, new { @class = "form-control", @placeholder = "Consumer Id", onchange = "SearchByPartyCode();" })
+        </div>
+        <div class="col-md-3">
+            <label>Party Name</label><span style="color:red;">*</span>
+            @Html.DropDownList("PM_PartyCode", null, "Select Consumer", new { @class = "form-control select2 ", required = "required", @onchange = "SearchByPartyName();", @readonly = "readonly" })
+        </div>
+        <div class="col-md-3">
+            <label>Consumer Father/Husband Name</label>
+            @Html.TextBoxFor(m => m.PM_FHName, new { @class = "form-control", @placeholder = "Consumer F/H Name", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Area Name</label>
+            @Html.TextBoxFor(m => m.AM_AreaName, new { @class = "form-control", @placeholder = "Area Name", @readonly = "readonly" })
+        </div>
+        <div class="col-md-3">
+            <label>Para</label>
+            @Html.TextBoxFor(m => m.PM_ParaName, new { @class = "form-control", @placeholder = "Para", @readonly = "readonly" })
+        </div>
+        <div class="col-md-3">
+            <label>Contact No</label>
+            @Html.TextBoxFor(m => m.PM_MobNo, new { @class = "form-control", @placeholder = "Contact No", @readonly = "readonly" })
+        </div>
+        <div class="col-md-3">
+            <label>Form Amount</label>
+            @Html.TextBoxFor(m => m.fr_rate, new { @class = "form-control", @placeholder = "Form Amount", @readonly = "readonly" })
+        </div>
+    </div>
+    <p></p>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <label>Form No</label><span style="color:red;">*</span>
+            @Html.TextBoxFor(m => m.FORMNO, new { @class = "form-control", @placeholder = "Form No" })
+        </div>
+        <div class="col-md-3">
+            <label>Amount</label>
+            @Html.TextBoxFor(m => m.AMOUNT, new { @class = "form-control", @placeholder = "Amount", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <br />
+            <a href="/Transaction/FormSalesList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-3">
+            <br />
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" id="btnInsUp" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $('.select2').select2();
+    minimumInputLength: 3
+</script>
+
+<script src="~/Scripts/AppScript/FORMSALE.js"></script>

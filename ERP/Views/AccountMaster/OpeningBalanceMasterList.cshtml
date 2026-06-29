@@ -1,0 +1,86 @@
+﻿@model BObject.AccountModel.AccountMaster
+@{
+    ViewBag.Title = "Opening Balance List";
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm rounded">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-center w-100">@ViewBag.Title</h4>
+        </div>
+
+        <div class="card-body">
+            @using (Html.BeginForm("SubAccountMasterList", "AccountMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+            {
+                <input id="btnAddEnable" type="hidden" value="0" />
+                <input id="btnEditEnable" type="hidden" value="0" />
+                <input id="btnViewEnable" type="hidden" value="0" />
+                <input id="btnDeleteEnable" type="hidden" value="0" />
+                <input id="JQRData" type="hidden" value="@ViewBag.GlobalData" />
+                <input id="hdnCompanyID" type="hidden" value="@Model.AM_CompanyID" />
+                <input id="hdnSessionId" type="hidden" value="@Model.AM_FYId" />
+
+                <div class="table-responsive mt-3">
+                    <input type="hidden" id="RowCount" name="RowCount" value="@Model.AccountMasterList.Count" />
+
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="thead-dark text-center">
+                            <tr>
+                                <th hidden><strong>AMId</strong></th>
+                                <th><strong>A/C Code</strong></th>
+                                <th><strong>Description</strong></th>
+                                <th><strong>Sub Op</strong></th>
+                                <th><strong>Debit</strong></th>
+                                <th><strong>Credit</strong></th>
+                                <th><strong>Action</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.AccountMasterList)
+                            {
+                                <tr class="text-center">
+                                    <td hidden>@item.AM_AccountId</td>
+                                    <td>@item.AM_AccountCode</td>
+                                    <td class="text-start">@item.AM_AccDescription</td>
+                                    <td>@item.ISSubAc</td>
+                                    <td class="text-end">
+                                        @(item.AM_OPeningType.Trim() == "D" ? string.Format("{0:0.0}", item.AM_OpeningBalance) : "0.0")
+                                    </td>
+                                    <td class="text-end">
+                                        @(item.AM_OPeningType.Trim() == "C" ? string.Format("{0:0.0}", item.AM_OpeningBalance) : "0.0")
+                                    </td>
+                                    <td>
+                                        @if (item.ISSubAc == "NO")
+                                        {
+                                        <a title="Edit" onclick="editAMdata('@item.AM_AccountId')">
+                                            <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+                                        </a>
+                                        }
+                                        else
+                                        {
+                                    <a title="Edit" onclick="editdata('@item.AM_AccountId')">
+                                        <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+                                    </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function editAMdata(AccountId) {
+            window.location.href = location.origin+ "/AccountMaster/OpeningBalanceAccountMaster?Id=" + AccountId;
+        }
+
+        function editdata(AccountId) {
+            window.location.href = location.origin+"/AccountMaster/OpeningBalanceSubAccountMaster?Id=" + AccountId;
+        }
+    </script>
+}

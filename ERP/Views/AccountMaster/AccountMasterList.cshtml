@@ -1,0 +1,134 @@
+﻿@model BObject.AccountModel.AccountMaster
+@{
+    ViewBag.Title = "Account Master List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-body-height">
+
+    @using (Html.BeginForm("AccountMasterList", "AccountMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form", autocomplete = "off" }))
+    {
+        <h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+        <div class="clearfix mb-3">
+            @if ((bool)Session["CanAdd"] == true)
+            {
+                <a href="/AccountMaster/AccountMaster" class="btn btn-primary float-end" style="text-decoration:none;">ADD</a>
+            }
+        </div>
+        <hr />
+
+
+        if ((bool)Session["CanView"] == true)
+        {
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <label for="ddlAcgroup">Group:</label>
+                    <div class="input-group">
+                        <!-- Dropdown -->
+                        <select id="ddlAcgroup" name="ddlAcgroup" class="form-control">
+                            <option value="0">Select</option>
+                            @foreach (var BM in Model.AccountGroupList)
+                            {
+                                <option value="@BM.GM_GroupId">@BM.GM_GroupDescription</option>
+                            }
+                        </select>
+
+                        <!-- Search Button -->
+                        <div class="input-group-append ms-2">
+                            <button type="submit" id="btnSubmit" class="btn btn-primary">Search</button>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <div class="input-group-append ms-2">
+                            <button type="button" id="btnReset" class="btn btn-secondary" onclick="location.reload();">Reset</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+                <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+                    <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                        <thead>
+                            <tr>
+                                <th data-checkbox="true"></th>
+                                <th>Sl.</th>
+                                <th>Group Name</th>
+                                <th>Account Code</th>
+                                <th>Account Name</th>
+                                <th>Opening Type</th>
+                                <th>Opening Balance</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1; }
+                            @foreach (var item in Model.AccountMasterList)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@i</td>
+                                    <td>@item.GM_GroupDescription</td>
+                                    <td>@item.AM_AccountCode</td>
+                                    <td>@item.AM_LongName</td>
+                                    <td>@item.AM_OPeningType</td>
+                                    <td>@item.AM_OpeningBalance</td>
+
+                                    @if ((bool)Session["CanEdit"] == true)
+                                    {
+                                        <td>
+                                            <a href="/AccountMaster/AccountMaster?Id=@item.AM_AccountId" style="text-decoration:none;">
+                                                <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0)" style="text-decoration:none;">
+                                                <img src="~/Logo/Edit.png" width="30" height="30" title="Edit Not Authorized" />
+                                            </a>
+                                        </td>
+                                    }
+
+                                    @*@if ((bool)Session["CanDelete"] == true)
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="DeleteArea(@item.AM_AccountId);" style="text-decoration:none;">
+                                                    <img src="~/Logo/Delete.png" width="30" height="30" title="Delete" />
+                                                </a>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0)" style="text-decoration:none;">
+                                                    <img src="~/Logo/Delete.png" width="30" height="30" title="Delete Not Authorized" />
+                                                </a>
+                                            </td>
+                                        }*@
+
+
+                                </tr>
+                                i = i + 1;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div> }
+        else
+        {
+            <div class="alert-danger">
+                <h3>You Are Not Authorize....................!</h3>
+            </div>}
+
+
+        @Scripts.Render("~/bundles/jquery")
+        <script src="~/Scripts/data-table/bootstrap-table.js"></script>
+    }
+</div>

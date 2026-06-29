@@ -1,0 +1,161 @@
+﻿@model BObject.PartyTax_PT
+@{
+   Layout = null;
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>WaterTax Collection Receipt</title>
+    <link href="~/Content/EditableInvoice/css/print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/EditableInvoice/css/style.css" rel="stylesheet" />
+    <script src="~/Content/EditableInvoice/js/jquery-1.3.2.min.js"></script>
+    <script src="~/Content/EditableInvoice/js/example.js"></script>
+</head>
+<body>
+    <br />
+    <div id="page-wrap">
+        <input type="hidden" id="TAmount" value="@Model.PT_Amount" />
+        <h2 style="text-align:center">KOWGACHI-I VILLAGE LEVEL WATER SUPPLY AND SANITATION COMMITTEE</h2>
+        <h3 style="text-align:center">Bankpally, Shyamnagar North 24 Pgs</h3>
+        <h3 style="text-align:center">Phone No : 7980607071</h3>
+        <hr />
+        <h3 style="text-align:center; font-size: 25px;">Water Tax Receipt</h3>
+        <hr />
+        <div style="font-size: 20px;">
+            <div class="row">
+                <span><b>Bill No :</b> @Model.PT_RcptNo</span>
+                <span style="padding-left:145px"><b>Date :</b> @Model.PT_PmtDate.ToShortDateString()</span>
+            </div><br />
+            <div class="row">
+                <p><b>Consumer ID :</b><b style="font-size: 22px;"> @Model.PM_PartyCode </b></p>
+                <p><b>Name Of Consumer :</b> @Model.PM_PartyName</p>
+                <p><b>Father / Husband :</b> @Model.PM_FHName</p>
+                <p><b>Area :</b> @Model.AM_AreaName</p>
+                <p><b>Para :</b> @Model.PM_ParaName</p>
+            </div><br />
+            <hr />
+            <div class="row">
+                <p><b>Paid Month : @Model.PT_DtFroms To @Model.PT_DtTos </b></p>
+            <br />
+                <p><b>Amount :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b> <b style="font-size: 22px;">@((float)Model.PT_Amount)</b></p>
+                @if (Model.PL_RcptType == "CA")
+                {
+                     <br />
+            <p><b>Paid Mode :</b>&nbsp;&nbsp; Cash</p> }
+                    else if (Model.PL_RcptType == "BA")
+                    {
+        <p>Paid Mode : Bank</p> }
+                    else
+                    {
+        <p>Paid Mode : Online</p>            }
+            </div><br />
+                  <div style="font-size: 18px;">
+                      <span>Received Rupees :</span>
+                      <span id="WordAmount"></span>
+                  </div>
+
+            <hr />
+            <br /><br />
+            <div>
+                <span>Dealing Assistant With Seal</span>
+            </div>
+        </div>
+		        <span style="padding-left:320px">Printed By : @ViewBag.FirstName</span>
+    </div>
+    <script>
+
+        function number2text(value) {
+            var fraction = Math.round(frac(value) * 100);
+            var f_text = "";
+
+            if (fraction > 0) {
+                f_text = "And " + convert_number(fraction) + " Paise";
+            }
+
+            return convert_number(value) + " Rupee " + f_text + " Only";
+        }
+
+        function frac(f) {
+            return f % 1;
+        }
+
+        function convert_number(number) {
+            if ((number < 0) || (number > 999999999)) {
+                return "NUMBER OUT OF RANGE!";
+            }
+            var Gn = Math.floor(number / 10000000);  /* Crore */
+            number -= Gn * 10000000;
+            var kn = Math.floor(number / 100000);     /* lakhs */
+            number -= kn * 100000;
+            var Hn = Math.floor(number / 1000);      /* thousand */
+            number -= Hn * 1000;
+            var Dn = Math.floor(number / 100);       /* Tens (deca) */
+            number = number % 100;               /* Ones */
+            var tn = Math.floor(number / 10);
+            var one = Math.floor(number % 10);
+            var res = "";
+
+            if (Gn > 0) {
+                res += (convert_number(Gn) + " Crore");
+            }
+            if (kn > 0) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(kn) + " Lakh");
+            }
+            if (Hn > 0) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(Hn) + " Thousand");
+            }
+
+            if (Dn) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(Dn) + " Hundred");
+            }
+
+
+            var ones = Array("", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eightteen", "Nineteen");
+            var tens = Array("", "", "Twenty", "Thirty", "Fourty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety");
+
+            if (tn > 0 || one > 0) {
+                if (!(res == "")) {
+                    res += " And ";
+                }
+                if (tn < 2) {
+                    res += ones[tn * 10 + one];
+                }
+                else {
+
+                    res += tens[tn];
+                    if (one > 0) {
+                        res += ("-" + ones[one]);
+                    }
+                }
+            }
+
+            if (res == "") {
+                res = "Zero";
+            }
+            return res;
+        }
+        $(document).ready(function () {
+            document.getElementById('WordAmount').innerHTML = number2text(document.getElementById('TAmount').value);
+            window.print();
+            setTimeout(function () {
+                window.close();
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

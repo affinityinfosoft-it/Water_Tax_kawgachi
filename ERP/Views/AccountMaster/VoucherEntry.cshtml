@@ -1,0 +1,514 @@
+﻿@model BObject.AccountModel.AccountLedger
+@{
+    ViewBag.Title = @Model.VoucherType + " Voucher Entry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .mGrid {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+        .mGrid thead th {
+            background-color: #399dcc;
+            color: white;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .mGrid tbody td {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .mGrid tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .mGrid tbody tr:hover {
+            background-color: #e2e6ea;
+            cursor: pointer;
+        }
+
+    .table-responsive {
+        margin-top: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+
+    .padding-left-right-30 {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+</style>
+<div class="page-body-height">
+    <h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+    <hr />
+    @using (Html.BeginForm("VoucherEntry", "AccountMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "FormSubmit", name = "FormSubmit", @class = "", role = "form", autocomplete = "off" }))
+    {
+
+        <input id="btnAddEnable" name="btnAddEnable" type="hidden" value="0" />
+        <input id="btnEditEnable" name="btnEditEnable" type="hidden" value="0" />
+        <input id="btnViewEnable" name="btnViewEnable" type="hidden" value="0" />
+        <input id="btnDeleteEnable" name="btnDeleteEnable" type="hidden" value="0" />
+        <input type="hidden" id="LD_VoucherTypeId" name="LD_VoucherTypeId" value="@Model.LD_VoucherTypeId" />
+        <input id="hdnPaymentId" name="hdnPaymentId" type="hidden" value="0" />
+        <div class="row">
+            <div class="col-md-11">
+            </div>
+            <div class="col-md-1">
+                @*<a id="btnBack" class="btnBack" href="@Url.Action("studentlist", "home")">Back<i class="ui-icon ui-icon-arrowreturnthick-1-w"></i></a>*@
+            </div>
+        </div>
+        @*<div class="clearfix"></div>*@
+<div class="row">
+
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label for="txtDateS">Date:</label>
+            @*<input id="txtDateS" name="txtDateS" class="form-control" @type = "date" value="@Model.LD_DateS" readonly />*@
+            <input id="txtDateS" name="txtDateS" class="form-control" type="date"
+                   value="@(string.IsNullOrEmpty(Model.LD_DateS)
+                ? DateTime.Now.ToString("yyyy-MM-dd")
+                : Convert.ToDateTime(Model.LD_DateS).ToString("yyyy-MM-dd"))" />
+
+        </div>
+        </div>
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label for="txtVoucherNo">Voucher No:</label>
+            <input id="txtVoucherNo" name="txtVoucherNo" class="form-control" value="@Model.LD_VoucherNo" readonly />
+
+        </div>
+    </div>
+    @if (Model.LD_VoucherTypeId != 3)
+    {
+        <div class="col-lg-4">
+            <div class="form-group">
+                @if (Model.LD_VoucherTypeId == 1)
+                {
+                    <label for="ddlAccount">Account List<span style="color:red">(Cr.)</span>:</label>
+                }
+                else if (Model.LD_VoucherTypeId == 2)
+                {
+                    <label for="ddlAccount">Account List<span style="color:red">(Dr.)</span>:</label>
+
+                }
+                else
+                {
+                    <label for="ddlAccount">Account List:</label>
+                }
+
+                <select id="ddlAccount" name="ddlAccount" class="form-control">
+                    <option value="0">Select</option>
+                    @foreach (var item in Model.AccountList)
+                    {
+                        if (Model.AccountValue == item.Value)
+                        {
+                            <option value="@item.Value" selected>@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="txtChequeNo">Cheque No:</label>
+                <input id="txtChequeNo" name="txtChequeNo" class="form-control" value="@Model.LD_ChequeNo" />
+
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="txtChequeNo">Cheque Date:</label>
+                @*              <input id="txtChequeDate" name="txtChequeDate" class="form-control" value="@Model.LD_ChequeDate" readonly />*@
+                <input id="txtChequeDate" name="txtChequeDate" class="form-control" type="date"
+                       value="@(Model.LD_ChequeDate.HasValue
+                ? Model.LD_ChequeDate.Value.ToString("yyyy-MM-dd")
+                : "")" />
+
+
+
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label for="txtReferenceNo">Reference No:</label>
+            <input id="txtReferenceNo" name="txtReferenceNo" class="form-control" value="@Model.LD_ReferenceNo" />
+
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label for="LD_Payee">Payee/Rec:</label>
+            <input id="txtPayee" name="txtPayee" class="form-control" value="@Model.LD_Payee" />
+
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="form-group">
+            <label for="txtNarration">Narration:</label>
+            <textarea id="txtNarration" name="txtNarration" class="form-control" style="max-width: 100% !important;">@Model.LD_Narration</textarea>
+
+        </div>
+    </div>
+</div>
+
+
+        <hr />
+        <h4 style="background-color: aliceblue; text-align: center;">Entry Details</h4>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="ddlParticulars">Particulars:</label>
+                    <select id="ddlParticulars" name="ddlParticulars" class="form-control select2">
+                        <option value="0-0">Select</option>
+                        @foreach (var item in Model.ParticularsList)
+                        {
+
+                            if (item.LD_IsFund == true && Model.LD_VoucherTypeId != 1)
+                            {
+                                <option value="@item.Value" class="Fund">@item.Text (FUND)</option>
+
+                            }
+                            else if (item.LD_IsFund == false)
+                            {
+                                <option value="@item.Value">@item.Text </option>
+
+                            }
+
+
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="col-lg-3" @(Model.LD_VoucherTypeId == 2 ? "hidden" : "")>
+                <div class="form-group">
+                    <label for="ddlFund">Fund Name:</label>
+                    <select id="ddlFund" name="ddlFund" class="form-control select2">
+                        <option value="0-0">Select</option>
+                        @foreach (var item in Model.ParticularsList.Where(a => a.LD_IsFund == true))
+                        {
+                            <option value="@item.Value">@item.Text </option>
+
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="nbmAmount">Amount:</label>
+                    <input type="number" id="nbmAmount" name="nbmAmount" class="form-control numeric" value="" />
+
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="nbmAmount">Type:</label>
+                    <select id="ddlDrCr" name="ddlDrCr" class="form-control">
+                        @*<option value="0">Select</option>*@
+                        @if (Model.LD_VoucherTypeId == 1)
+                        {
+                            <option value="D">Debit</option>
+                        }
+                        else if (Model.LD_VoucherTypeId == 2)
+                        {
+                            <option value="C">Credit</option>
+
+                        }
+                        else
+                        {
+                            <option value="D">Debit</option>
+                            <option value="C">Credit</option>
+
+
+                        }
+
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="txtRemarks">Remarks:</label>
+                    <input id="txtRemarks" name="txtRemarks" class="form-control" value="@Model.LD_Remarks" />
+
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <div class="form-group">
+                    <br />
+                    <button type="button" id="btnAdd" class="btn btn-default" onclick="addRecordCashVoucherEntryTable();" style="background-color: #007bff; color: white; border-color: #007bff;">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-lg-12 padding-left-right-30">
+                <div class="table-responsive">
+                    <input type="hidden" id="RowCount" name="RowCount" value="0" />
+                    <table id="tblVoucherEntry" class="mGrid table-bordered">
+                        <thead>
+                            <tr>
+                                <th hidden><strong>Particulars</strong></th>
+                                <th><strong>Particulars</strong></th>
+                                <th hidden><strong>Fund</strong></th>
+                                <th><strong>Fund</strong></th>
+                                <th hidden><strong>Amount</strong></th>
+                                <th hidden><strong>Mode</strong></th>
+                                <th><strong>Debit</strong></th>
+                                <th><strong>Credit</strong></th>
+                                <th hidden><strong>Remarks</strong></th>
+                                <th><strong>Remarks</strong></th>
+                                <th><strong>Action</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows will be appended here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <br />
+                    <input type="button" id="btnSubmit" class="btn btn-primary float-end" style="text-decoration:none;" value="Submit" onclick="javascript:SaveData();" />
+
+                    @if (ViewBag.LD_LedgerID > 0)
+                    {
+                        <input type="button" id="btnPrint" class="btn btn-warning" value="Print" onclick="javascript: VoucherPrint(@ViewBag.LD_LedgerID);">
+                    }
+                    @*<input type="button" id="btnReset" class="btn btn-default" value="Reset" onclick="javascript:Reset();">*@
+
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="form-group">
+                    <input type="hidden" id="hdnValidation" name="hdnValidation" value="@ViewBag.MessageId" />
+                    <div id="divValidation"></div>
+                    <div id="divMessage" style="text-align:right;margin-top:25px;font-size: 16px;color: green;font-weight: bold;text-transform: capitalize">@ViewBag.Message</div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script src="~/Scripts/Select2/select2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".select2").select2({
+            placeholder: "Select",
+            allowClear: true
+        });
+        $('.select2').click(function () {
+          $('.select2-results__option:contains("(FUND)")').css('color', 'red');
+        });
+        if ($("#LD_VoucherTypeId").val() != "3") {
+            $('#txtChequeDate').datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                minDate: '01/01/1950',
+                yearRange: "-100:+0",
+                maxDate: '+0D'
+            });
+        }
+        $('#txtDateS').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: '01/01/1950',
+            yearRange: "-100:+0",
+            maxDate: '+0D'
+        });
+        if ($('#txtDateS').val() == "") {
+            $('#txtDateS').datepicker("setDate", new Date());
+        }
+    });
+
+    function VoucherPrint(id) {
+
+        var url = location.origin+ "/VoucherPrint.aspx?LD_LedgerID=" + id;
+        var WindowDimensions = "toolbars=no,menubar=no,location=no,titlebar=no,scrollbars=yes,resizable=yes,status=yes"
+        var PopUp = window.open(url, "MyReportWindow", WindowDimensions);
+        if (PopUp.outerWidth < screen.availWidth || PopUp.outerHeight < screen.availHeight) {
+            PopUp.moveTo(25, 50);
+            PopUp.resizeTo(screen.availWidth - 10, screen.availHeight - 10);
+        }
+    }
+    function addRecordCashVoucherEntryTable() {
+        var ddlParticulars = $('#ddlParticulars').val();
+        var ddlParticularsText = $("#ddlParticulars option:selected").text();
+        var ddlFund = $('#ddlFund').val();
+        var ddlFundText = ddlFund=="0-0"?" ":$("#ddlFund option:selected").text();
+        var Amount = isNaN(parseFloat($.trim($('#nbmAmount').val()))) == true ? 0 : parseFloat($.trim($('#nbmAmount').val()));
+        var ddlDrCr = $.trim($('#ddlDrCr').val());
+        var txtRemarks = $.trim($('#txtRemarks').val());
+        if (ValidationOnAddRow() == true) {
+
+            var table = document.getElementById("tblVoucherEntry");
+            var RNo;
+            var row = table.insertRow(RNo);
+            var Cell1 = row.insertCell(0);
+            var Cell2 = row.insertCell(1);
+            var Cell3 = row.insertCell(2);
+            var Cell4 = row.insertCell(3);
+            var Cell5 = row.insertCell(4);
+            var Cell6 = row.insertCell(5);
+            var Cell7 = row.insertCell(6);
+            var Cell8 = row.insertCell(7);
+            var Cell9 = row.insertCell(8);
+            var Cell10 = row.insertCell(9);
+            var Cell11 = row.insertCell(10);
+            Cell1.setAttribute('hidden', 'hidden');
+            Cell3.setAttribute('hidden', 'hidden');
+            Cell5.setAttribute('hidden', 'hidden');
+            Cell6.setAttribute('hidden', 'hidden');
+            Cell9.setAttribute('hidden', 'hidden');
+
+
+            Cell1.innerHTML = "<input type='hidden' class='Particulars' id='Particulars_' name='Particulars_' value='" + ddlParticulars + "' />";
+            Cell2.innerHTML = ddlParticularsText
+            Cell3.innerHTML = "<input type='hidden' class='Funds' id='Fund_' name='Fund_' value='" + ddlFund + "' />";
+            Cell4.innerHTML = ddlFundText
+            Cell5.innerHTML = "<input type='hidden' class='DrCr' id='DrCr_' name='DrCr_' value='" + ddlDrCr + "' />";
+            Cell6.innerHTML = "<input type='hidden' class='Amount' id='Amount_' name='Amount_' value='" + Amount + "' />";
+            if (ddlDrCr == "D") {
+                Cell7.innerHTML = Amount;
+                Cell8.innerHTML = "";
+            }
+            else if (ddlDrCr == "C") {
+                Cell7.innerHTML = "";
+                Cell8.innerHTML = Amount;
+            }
+            Cell9.innerHTML = "<input type='hidden' class='Remarks' id='Remarks_' name='Remarks_' value='" + txtRemarks + "' />";
+            Cell10.innerHTML = txtRemarks;
+            Cell11.innerHTML = "<a title='Delete...' onclick='return deleteRow(this)'> <img src='/Logo/Delete.png' width='30' height='30' title='Delete' /></a>";
+
+
+            $(Cell2).attr("style", "text-align:center;")
+            $(Cell4).attr("style", "text-align:center;")
+            $(Cell7).attr("style", "text-align:center;")
+            $(Cell8).attr("style", "text-align:center;")
+            $(Cell10).attr("style", "text-align:center;")
+            RearrangeId();
+        }
+    }
+    function ValidationOnAddRow() {
+        var ddlParticularsText = $("#ddlParticulars option:selected").text();
+        var Duplicate = 0;
+        if ($('#ddlParticulars').val() == "0-0" || $('#ddlParticulars').val() == null) {
+            alert("select Particulars");
+            $('#ddlParticulars').focus();
+            return false;
+        }
+        if ($('#nbmAmount').val() == "0" || $('#nbmAmount').val() == null || $('#nbmAmount').val() == "") {
+            alert("Enter Amount");
+            $('#nbmAmount').focus();
+            return false;
+        }
+        $('#tblVoucherEntry tr').each(function () {
+            $Name = $(this).find('td:eq(1)').text();
+            if ($Name == ddlParticularsText) {
+                
+                Duplicate = 1;
+            }
+        });
+
+        if (Duplicate==1) {
+            alert("Records already exists");
+            return false;
+        }
+      
+        return true;
+    }
+    function RearrangeId() {
+        var rowcount = 0;
+        $.each($(".Particulars"), function (Index, Value) {
+            $(Value).attr("id", "Particulars_" + Index);
+            $(Value).attr("name", "Particulars_" + Index);
+            rowcount += 1;
+        });
+        $.each($(".Funds"), function (Index, Value) {
+            $(Value).attr("id", "Fund_" + Index);
+            $(Value).attr("name", "Fund_" + Index);
+        });
+        $.each($(".DrCr"), function (Index, Value) {
+            $(Value).attr("id", "DrCr_" + Index);
+            $(Value).attr("name", "DrCr_" + Index);
+        });
+        $.each($(".Amount"), function (Index, Value) {
+            $(Value).attr("id", "Amount_" + Index);
+            $(Value).attr("name", "Amount_" + Index);
+        });
+        $.each($(".Remarks"), function (Index, Value) {
+            $(Value).attr("id", "Remarks_" + Index);
+            $(Value).attr("name", "Remarks_" + Index);
+
+        });
+        $("#RowCount").val(rowcount);
+    }
+    function deleteRow(rowNo) {
+        var agree = confirm("Are you sure you want to delete this record?");
+        if (agree) {
+            $(rowNo).closest('tr').remove();
+            RearrangeId();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function SaveData() {
+        if (ValidateForm() == true) {
+            $("#btnSubmit").hide();
+            document.FormSubmit.submit();
+        }
+
+    }
+    function ValidateForm() {
+        if ($("#LD_VoucherTypeId").val() != "3") {
+            if ($("#ddlAccount").val() == "0" || $("#ddlAccount").val() == null) {
+                alert("Select Account");
+                return false;
+            }
+        }
+        if ( $('#tblVoucherEntry tr').length>1) {
+           
+        }
+        else {
+            alert("Please enter the entry details");
+            return false;
+
+        }
+       
+        return true;
+    }
+</script>

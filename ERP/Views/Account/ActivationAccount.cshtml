@@ -1,0 +1,33 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Activation Account ^_^";
+}
+@Styles.Render("~/Content/css")
+
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-success">
+                <h2>Activation Account</h2>
+                <strong>Success!</strong>  Your account has been activated successfully.
+                <div>
+                    <a href="/Account/Login">
+                        <img src="~/Logo/back.png" width="20" height="20" />
+                        Back To Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong>@ViewBag.Message
+    </div>
+}

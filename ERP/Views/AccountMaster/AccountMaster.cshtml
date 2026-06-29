@@ -1,0 +1,169 @@
+﻿@model BObject.AccountModel.AccountMaster
+
+@{
+    ViewBag.Title = "Account Master";
+}
+
+<!-- Toastr CSS and jQuery Scripts (place once only, preferably in _Layout.cshtml) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+    <style >
+    .btn-animated {
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .btn-animated:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-animated i {
+        transition: transform 0.3s ease-in-out;
+        margin-right: 6px;
+    }
+
+    .btn-animated:hover i {
+        transform: rotate(360deg);
+    }
+
+    .btn-gradient {
+        background: linear-gradient(45deg, #1e90ff, #007bff);
+        border: none;
+        color: white;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f1f1f1;
+        color: #333;
+    }
+</style>
+<div class="page-body-height">
+    <h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+    <hr />
+    @using (Html.BeginForm("AccountMaster", "AccountMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "FormSubmit", name = "FormSubmit", role = "form", autocomplete = "off" }))
+    {
+        <input id="btnAddEnable" name="btnAddEnable" type="hidden" value="0" />
+        <input id="btnEditEnable" name="btnEditEnable" type="hidden" value="0" />
+        <input id="btnViewEnable" name="btnViewEnable" type="hidden" value="0" />
+        <input id="btnDeleteEnable" name="btnDeleteEnable" type="hidden" value="0" />
+        <input type="hidden" id="hdnCollegeId" value="@ViewBag.CollegeId" />
+        <input type="hidden" id="hdnSessionId" value="@ViewBag.SessionId" />
+        <input id="hdnAccountId" name="hdnAccountId" type="hidden" value="@Model.AM_AccountId" />
+        <input id="hdnRollId" name="hdnRollId" type="hidden" value="@ViewBag.RoleId" />
+        <input id="hdnPaymentId" name="hdnPaymentId" type="hidden" value="0" />
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="txtAccountCode">Account Code:</label>
+                    <input id="txtAccountCode" name="txtAccountCode" class="form-control" value="@Model.AM_AccountCode" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="txtAccountName">Account Name:</label>
+                    <input id="txtAccountName" name="txtAccountName" class="form-control" value="@Model.AM_LongName" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="txtAccountDesc">Account Desc:</label>
+                    <input id="txtAccountDesc" name="txtAccountDesc" class="form-control" value="@Model.AM_AccDescription" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="ddlAcgroup">Group:</label>
+                    <select id="ddlAcgroup" name="ddlAcgroup" class="form-control">
+                        <option value="0">Select</option>
+                        @foreach (var BM in Model.AccountGroupList)
+                        {
+                            <option value="@BM.GM_GroupId" @(Model.AM_GroupId == BM.GM_GroupId ? "selected" : "")>
+                                @BM.GM_GroupDescription
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="ISSubAc">Sub A/C:</label>
+                    <select id="ISSubAc" name="ISSubAc" class="form-control">
+                        <option value="Y" @(Model.ISSubAc == "Y" ? "selected" : "")>Yes</option>
+                        <option value="N" @(Model.ISSubAc == "N" || Model.ISSubAc == null ? "selected" : "")>No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="SuppressPayee">Suppress Payee Name in Ledger:</label><br />
+                    @Html.CheckBox("AM_SuppressPayee", Model.AM_SuppressPayee == "Y")
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="AM_IsFund">Is Fund:</label><br />
+                    @Html.CheckBox("AM_IsFund", Model.AM_IsFund)
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="hdnValidation" name="hdnValidation" value="@ViewBag.MessageId" />
+
+        <hr />
+        <div class="row mt-4">
+            <a href="/AccountMaster/AccountMasterList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+
+            <div class="row mt-4">
+                <div class="col-12 text-end">
+                    <button type="button" id="btnSubmit" class="btn btn-animated btn-gradient me-2" onclick="SaveData();">
+                        <i class="bi bi-save"></i> Save
+                    </button>
+                    <button type="button" id="btnReset" class="btn btn-animated btn-outline-secondary" onclick="location.reload();">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    }
+</div>
+
+<script type="text/javascript">
+    function SaveData() {
+        document.FormSubmit.submit();
+    }
+
+    $(document).ready(function () {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    toastr.success("@TempData["SuccessMessage"]", 'Success', {
+                        closeButton: true,
+                        progressBar: true,
+                        timeOut: 2000,
+                        positionClass: 'toast-top-right'
+                    });
+                    setTimeout(function () {
+                        window.location.href = '/AccountMaster/AccountMasterList';
+                    }, 2000);
+                </text>
+            }
+        });
+</script>

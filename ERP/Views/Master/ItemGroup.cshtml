@@ -1,0 +1,70 @@
+﻿@model BObject.ItemGroup_IG
+
+@{
+    ViewBag.Title = "ItemGroup";
+}
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Area", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.ItemGroupID)
+    <div class="row">
+        <div class="col-md-3">
+            @*@Html.LabelFor(m => m.CM_ID, new { @class = "form-label" })
+                @Html.DropDownList("CM_ID", null, "Select Company", new { @class = "form-control", required = "required" })*@
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.ItemCode, new { @class = "form-label" })<span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.ItemCode, new { @class = "form-control", @placeholder = "ItemGroup Code(Number only)" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.ItemGroupName, new { @class = "form-label" })<span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.ItemGroupName, new { @class = "form-control", @placeholder = "Item Group Name" })
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+
+
+
+
+    <br />
+    <div class="row">
+        <div class="col-md-8">
+            <a href="/Master/ItemGroupList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-4">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            @if (ViewBag.Button == "SUBMIT")
+            {
+                if ((bool)Session["CanSubmit"] == true)
+                {
+                    <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary">Submit Not Authorized</button>
+                }
+            }
+            @if (ViewBag.Button == "UPDATE")
+            {
+                if ((bool)Session["CanUpdate"] == true)
+                {
+                    <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary">Update Not Authorized</button>
+                }
+            }
+
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/ItemGroup.js"></script>

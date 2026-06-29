@@ -1,0 +1,61 @@
+﻿
+@model BObject.TankMaster_TM
+@{ ViewBag.Title = "Tank"; }
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("Tank", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.TM_ID)
+    <div class="row">
+        <div class="col-md-3">
+            <label>Tank Code</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.TM_TankCode, new { @class = "form-control", @placeholder = "Tank Code" })
+        </div>
+        <div class="col-md-3">
+            <label>Tank Name</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.TM_TankName, new { @class = "form-control", @placeholder = "Tank Name" })
+        </div>
+        <div class="col-md-3">
+            <label>Tank Lt</label><span style="color:red">*</span>
+             <select class="form-control" id="TM_Lt">   
+             <option value="1000">1000</option>
+             <option value="2000">2000</option>
+             <option value="3000">3000</option>
+             <option value="4000">4000</option>
+             <option value="5000">5000</option>
+             <option value="6000">6000</option>
+
+        @*@if (Model.TM_Lt == "200")
+                        {
+        <option value="200" selected>200</option> }
+                        else
+                        {
+        <option value="200">200</option>}
+                        @if (Model.TM_Lt == "400")
+                        {
+        <option value="400" selected>400</option> }
+                        else
+                        {
+        <option value="400">400</option>}*@
+                                  </select>
+        </div>
+        <div class="col-md-3">
+            <label>Tank Rate</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.TM_Rate, new { @class = "form-control", @placeholder = "Tank Rate" })
+        </div>
+    </div>
+    <br />
+      <br />
+         <div class="row">
+         <div class="col-md-9">
+              <a href="/Master/TankList">
+              <img src="~/Logo/back.png" width="20" height="20" />
+              Back To List
+              </a>
+         </div>
+         <div class="col-md-3">
+                <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+                <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+         </div>
+         </div>}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/Tank.js"></script>

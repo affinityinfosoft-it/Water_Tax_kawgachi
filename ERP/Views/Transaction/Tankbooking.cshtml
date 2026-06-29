@@ -1,0 +1,118 @@
+﻿@model BObject.TankBooking_TB
+@{
+    ViewBag.Title = "Water Tank Booking";
+}
+
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Tankbooking", "Transaction", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.AP_ID)
+<div class="row">
+    <div class="col-md-3">
+        <label>Code</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.AP_Code, new { @class = "form-control", @placeholder = "Code", @id = "AP_Code" })
+    </div>
+    <div class="col-md-3">
+        <label>Applicant Name</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.AP_Name, new { @class = "form-control", @placeholder = "Applicant Name" })
+    </div>
+    <div class="col-md-3">
+        <label>Father/Husband Name</label>
+        @Html.TextBoxFor(m => m.AP_FathersName, new { @class = "form-control", @placeholder = "Fathers Name" })
+    </div>
+    <div class="col-md-3">
+        <label>RegDate</label><span style="color:red">*</span>
+        @*@Html.LabelFor(m => m.RegDate, new { @class = "form-label" })<span style="color:red">*</span>*@
+        @Html.TextBoxFor(m => m.RegDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", @placeholder = "Reg Date" })
+    </div>
+    <div class="col-md-3">
+        <label for="AM_AreaID">Area Name:</label>
+        @Html.DropDownList("AM_AreaID", (IEnumerable<SelectListItem>)ViewBag.AM_AreaID, "Select Area", new { @class = "form-control select2", required = "required" })
+    </div>
+    <div class="col-md-3">
+        <label for="PM_ParaId">Para Name:</label>
+        @Html.DropDownList("PM_ParaId", (IEnumerable<SelectListItem>)ViewBag.PM_ParaId, "Select Para", new { @class = "form-control select2", required = "required" })
+    </div>
+    <div class="col-md-3">
+        <label>Address</label><span style="color:red"></span>
+        @Html.TextBoxFor(m => m.AP_Address, new { @class = "form-control", @placeholder = "Land Mark" })
+    </div>
+    <div class="col-md-3">
+        <label>Mobile</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.AP_Mobile, new { @class = "form-control", @placeholder = "Mobile Number" })
+    </div>
+
+
+
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-3">
+        <label>Form No</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.FormNo, new { @class = "form-control select2", type = "number", @placeholder = "Form No" })
+    </div>
+    <div class="col-md-3">
+        <label>Form Amount</label>
+        @Html.TextBoxFor(m => m.FormAmount, new { @class = "form-control", @placeholder = "Form Amount", @readonly = "readonly", @Value = "25" })
+    </div>
+    <div class="col-md-3">
+        <label>Booking Purpose</label>
+        @Html.TextBoxFor(m => m.Bk_Purpose, new { @class = "form-control", @placeholder = "Booking Purpose" })
+    </div>
+    <div class="col-md-3">
+        <label>Delivery Landmark</label><span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.DeliveryLandmark, new { @class = "form-control", @placeholder = "Land Mark" })
+    </div>
+    @*<div class="col-md-3">
+            <label>Tank Capacity(Ltr.)</label>
+            @Html.DropDownList("TM_ID", (IEnumerable<SelectListItem>)ViewBag.TM_ID, "Select Capacity", new { @class = "form-control select2", required = "required" })
+        </div>*@
+    <div class="col-md-3">
+        <label>Tank Capacity (Ltr.)</label>
+        @Html.DropDownList("TM_ID", (IEnumerable<SelectListItem>)ViewBag.TM_ID, "Select Capacity", new { @class = "form-control select2", required = "required" })
+               
+    </div>
+    <div class="col-md-3">
+        <label>From Date</label><span style="color:red">*</span>
+        <input type="date" id="FromDate" class="form-control DatePick" placeholder="__/__/____" />
+    </div>
+    <div class="col-md-3">
+        <label>From Time</label><span style="color:red">*</span>
+        <input type="time" id="FromTime" class="form-control DatePick" placeholder="__/__/____" />
+    </div>
+    <div class="col-md-3">
+        <label>To Date</label><span style="color:red">*</span>
+        <input type="date" id="ToDate" class="form-control DatePick" placeholder="__/__/____" />
+    </div>
+    <div class="col-md-3">
+        <label>To Time</label><span style="color:red">*</span>
+        <input type="time" id="ToTime" class="form-control DatePick" placeholder="__/__/____" />
+    </div>
+    <div class="col-md-3">
+        <label>Quantity</label>
+        @Html.TextBoxFor(m => m.Qty, new { @class = "form-control", type = "number" })
+    </div>
+    <div class="col-md-3">
+        <label>Total Amount</label>
+        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", type = "number" })
+    </div>
+</div>
+
+
+    <br />
+    <div class="row">
+        <div class="col-md-8">
+            <a href="/Transaction/TankbookingList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-4">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/TankBooking.js"></script>

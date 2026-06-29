@@ -1,0 +1,130 @@
+﻿@model BObject.company
+@{
+    ViewBag.Title = "Company";
+}
+@*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ccc !important;
+            border-radius: 0px !important;
+        }
+    </style>*@
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("Company", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.CM_ID)
+    <input type="hidden" id="hdnImage" value="@Model.logo" />
+    <div class="row">
+        <div class="col-md-3">
+            <p></p><label>Code</label>
+            @*@Html.LabelFor(m => m.code, new { @class = "form-label" })*@
+            @Html.TextBoxFor(m => m.code, new { @class = "form-control", @placeholder = "Code" })
+        </div>
+        <div class="col-md-3">
+            <p></p> <label>Name</label>
+            @*@Html.LabelFor(m => m.name, new { @class = "form-label" })*@
+            @Html.TextBoxFor(m => m.name, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            <p></p><label>City</label>
+            @*@Html.LabelFor(m => m.city, new { @class = "form-label" })*@
+            @Html.TextBoxFor(m => m.city, new { @class = "form-control", @placeholder = "City" })
+        </div>
+        <div class="col-md-3">
+            <p></p> <label>Address</label>
+            @*@Html.LabelFor(m => m.address, new { @class = "form-label" })*@
+            @Html.TextBoxFor(m => m.address, new { @class = "form-control", @placeholder = "Address" })
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-3">
+        <p></p><label>Pin</label>
+        @*@Html.LabelFor(m => m.pin, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.pin, new { @class = "form-control", @placeholder = "Pin" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Contact No</label>
+        @*@Html.LabelFor(m => m.phoneno, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.phoneno, new { @class = "form-control", @placeholder = "Contact No" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Business Type</label>
+        @*@Html.LabelFor(m => m.puser, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.puser, new { @class = "form-control", @placeholder = "Business Type" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Entry Date</label>
+        @*@Html.LabelFor(m => m.dt_of_entry, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.dt_of_entry, "{0:yyyy/MM/dd}", new { @class = "form-control", @type = "date" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <p></p><label>GST No</label>
+        @*@Html.LabelFor(m => m.invbill_prefix, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.invbill_prefix, new { @class = "form-control", @placeholder = "GST No" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Description</label>
+        @*@Html.LabelFor(m => m.ho, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.ho, new { @class = "form-control", @placeholder = "Description" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Services</label>
+        @*@Html.LabelFor(m => m.ipd_pref, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.ipd_pref, new { @class = "form-control", @placeholder = "Services" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Permited</label>
+        @*@Html.LabelFor(m => m.opd_pref, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.opd_pref, new { @class = "form-control", @placeholder = "Permited" })
+    </div>
+   
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <p></p><label>Founder</label>
+        @*@Html.LabelFor(m => m.opdinv_pref, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.opdinv_pref, new { @class = "form-control", @placeholder = "User" })
+    </div>
+    <div class="col-md-3">
+        <p></p><label>Logo</label>
+        @*@Html.LabelFor(m => m.logo, new { @class = "form-label" })*@
+        @Html.TextBoxFor(m => m.logo, new { @class = "form-control", @placeholder = "logo", @type = "file" })
+        <a href="@Model.logo" target="_blank">View<img src="~/Logo/arrow-down-circle.svg" /></a>
+    </div>
+</div>
+    <br />
+    <div class="row">
+        <div class="col-md-9">
+            <a href="/Master/CompanyList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            @if ((bool)Session["CanAdd"] == true)
+            {
+                <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+            }
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/AppScript/Company.js"></script>
+<script>
+    $('.select2').select2();
+
+</script>
+@*@if (TempData.ContainsKey("Message"))
+{
+    <script type="text/javascript">
+        //success / error / warning / info
+        toastr.warning("@TempData["Message"]")
+    </script>
+}*@

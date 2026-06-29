@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Voucher Entry Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body-height">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div class="row">
+
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="txtFdate">From Date</label>
+                <input id="txtFdate" name="txtFdate" class="form-control date" value=""  />
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="txtTdate">To Date</label>
+                <input id="txtTdate" name="txtTdate" class="form-control date" value=""  />
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="LD_VoucherTypeId"> Voucher Type </label>
+                <select id="LD_VoucherTypeId" name="LD_VoucherTypeId" class="form-control">
+                    <option value="0">Select</option>
+                    <option value="1">Payment</option>
+                    <option value="2">Receipt</option>
+                    <option value="3">Journal</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div style="height:20px"></div>
+            <div class="form-group">
+                <button type="button" id="btnSubmit" class="btn btn-default" onclick="redirectUrl()">Show</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.date').datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                minDate: '01/01/1950',
+                yearRange: "-100:+0",
+                maxDate: '+0D'
+            });
+        });
+            function redirectUrl() {
+                var FDate = $("#txtFdate").val();
+                var TDate = $("#txtTdate").val();
+                var LD_VoucherTypeId = $("#LD_VoucherTypeId").val();
+                var url = BaseAccountUrlForAspxRpts + "/VoucherEntryReport.aspx?VoucherTypeId=" + LD_VoucherTypeId + "&FDate=" + FDate + "&TDate=" + TDate;
+                var WindowDimensions = "toolbars=no,menubar=no,location=no,titlebar=no,scrollbars=yes,resizable=yes,status=yes"
+                var PopUp = window.open(url, "MyReportWindow", WindowDimensions);
+                if (PopUp.outerWidth < screen.availWidth || PopUp.outerHeight < screen.availHeight) {
+                    PopUp.moveTo(25, 50);
+                    PopUp.resizeTo(screen.availWidth - 10, screen.availHeight - 10);
+                }
+            }
+            function Reset() {
+                var url = window.location.href;
+                window.location.href = url;
+                return false;
+            }
+    </script>
+</div>
+
+
+

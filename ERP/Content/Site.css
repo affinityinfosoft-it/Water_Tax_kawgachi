@@ -1,0 +1,97 @@
+﻿/* === General Body Styling === */
+body {
+	padding-top: 10px;
+	padding-bottom: 20px;
+	background-image: url(../Logo/background2.png);
+	background-color: #0000ff14;
+	background-repeat: no-repeat;
+	background-size: cover; /* Full responsive background */
+	background-position: center top;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === Dropdown Menu Styling (Desktop) === */
+.dropdown-menu li {
+	position: relative;
+}
+
+.dropdown-menu .submenu {
+	display: none;
+	position: absolute;
+	left: 100%;
+	top: -7px;
+}
+
+.dropdown-menu .submenu-left {
+	right: 100%;
+	left: auto;
+}
+
+.dropdown-menu > li:hover {
+	background-color: #f1f1f1;
+}
+
+	.dropdown-menu > li:hover > .submenu {
+		display: block;
+	}
+
+/* === Dropdown Menu Styling (Mobile) === */
+@media (max-width: 768px) {
+	.dropdown-menu .submenu {
+		position: relative;
+		left: 0;
+		top: 0;
+	}
+
+	.dropdown-menu .submenu-left {
+		right: 0;
+		left: 0;
+	}
+
+	.dropdown-menu > li:hover > .submenu {
+		display: block;
+	}
+}
+
+/* === Form and Content Spacing === */
+.body-content {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/* === Form Elements Responsive === */
+input,
+select,
+textarea {
+	width: 100%;
+	max-width: 100%; /* Full width on mobile */
+	box-sizing: border-box;
+}
+
+/* === Select2 Dropdown Styling === */
+.select2-container .select2-selection--single {
+	height: 38px !important;
+}
+
+.select2-container--default .select2-selection--single {
+	border: 1px solid #ccc !important;
+	border-radius: 4px !important;
+	padding: 4px 10px;
+}
+
+/* === Responsive Typography === */
+@media (max-width: 768px) {
+	body {
+		font-size: 14px;
+	}
+
+	.body-content {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+/* === Optional: Smooth dropdown on mobile tap === */
+.dropdown-menu li:focus-within > .submenu {
+	display: block;
+}

@@ -1,0 +1,84 @@
+﻿@using BObject;
+@using ERP.DataAccess;
+@using ERP.Models;
+@{
+    ViewBag.Title = "Menu List";
+    List<MenuMasterModel> menuList = ERP.Controllers.BaseController.BuildMenu(((UserRoleDetails)System.Web.HttpContext.Current.Session["UserModel"]).UserId);
+}
+@Styles.Render("~/Content/Treeview")
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+<a href="Menu" style="text-decoration:none;" class="btn btn-primary">NEW CREATE</a>
+<hr />
+<div class="content">
+    <ul class="tree">
+        @foreach (var mp in menuList.Where(p => p.IsBaseMenu == true || p.IsMenu == true && p.IsSubMenu == false))
+        {
+            if (mp.IsMenu == true)
+            {
+                <li><a href="/Admin/Menu/@mp.MenuId" class="btn btn-primary" title="Click For Edit">@mp.MenuName</a></li>
+            }
+            else if (mp.IsBaseMenu == true && mp.IsSubMenu == false)
+            {
+                <li>
+                    <a class="btn btn-primary" href="/Admin/Menu/@mp.MenuId" title="Click For Edit">@mp.MenuName</a>
+                    @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+                    {
+                        @:<ul>
+                    }
+                    @RenderMenuItem(menuList, mp)
+                    @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+                    {
+                        @:</ul>
+                    }
+                    @*<ul>
+                        <li>
+                            <a>1st Child of 3</a>
+                            <ul>
+                                <li><a>1st grandchild</a></li>
+                                <li><a>2nd grandchild</a></li>
+                            </ul>
+                        </li>
+                        <li><a>2nd Child of 3</a></li>
+                        <li><a>3rd Child of 3</a></li>
+                    </ul>*@
+                </li>
+            }
+
+        }
+    </ul>
+</div>
+@helper RenderMenuItem(List<MenuMasterModel> menuList, MenuMasterModel mi)
+{
+    foreach (var cp in menuList.Where(p => p.ParentMenuId == mi.MenuId))
+    {
+        if (cp.IsSubMenu == true && cp.IsBaseMenu == false)
+        {
+            <li><a href="/Admin/Menu/@cp.MenuId" class="btn btn-primary" title="Click For Edit"> @cp.MenuName </a></li>
+        }
+        else
+        {
+            @:<li>
+            <a href="/Admin/Menu/@cp.MenuId" class="btn btn-primary" title="Click For Edit"> @cp.MenuName</a>
+        }
+        if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+        {
+            @:<ul>
+        }
+        @RenderMenuItem(menuList, cp)
+        if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+        {
+            @:</ul>
+        }
+        else
+        {
+            @:</li>
+        }
+    }
+}
+@if (TempData.ContainsKey("Message"))
+{
+    <script type="text/javascript">
+        //success / error / warning / info
+        toastr.success("@TempData["Message"]")
+    </script>
+}

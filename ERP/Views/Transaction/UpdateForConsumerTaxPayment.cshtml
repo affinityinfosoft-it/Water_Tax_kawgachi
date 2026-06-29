@@ -1,0 +1,77 @@
+﻿@model BObject.PartyMaster_PM
+
+@{
+    ViewBag.Title = "Update For Consumer Tax Payment";
+}
+<style>
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 0px !important;
+    }
+</style>
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("ConsumerPayment", "Transaction", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.PM_PartyId)
+    <div class="row">
+        <div class="col-md-3">
+            <label>Consumer Id</label><span style="color:red">*</span>
+            <input type="text" class="form-control" id="PartyCode" placeholder="Party Code" onchange="SearchByPartyCode();" />
+        </div>
+        <div class="col-md-3">
+            <label>Party Name</label><span style="color:red">*</span>
+            @Html.DropDownList("PM_PartyCode", null, "Select Consumer", new { @class = "form-control select2 ", required = "required", @onchange = "SearchByPartyName();" })
+        </div>
+        <div class="col-md-3">
+            <label>Consumer Father/Husband Name</label>
+            @Html.TextBoxFor(m => m.PM_FHName, new { @class = "form-control", @placeholder = "Consumer F/H Name" })
+        </div>
+        <div class="col-md-3">
+            <label>Area Name</label>
+            @Html.TextBoxFor(m => m.AM_AreaName, new { @class = "form-control", @placeholder = "Area Name" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Para</label>
+            @Html.TextBoxFor(m => m.PM_ParaName, new { @class = "form-control", @placeholder = "Para" })
+        </div>
+        <div class="col-md-3">
+            <label>Contact No</label>
+            @Html.TextBoxFor(m => m.PM_PhoneNo, new { @class = "form-control", @placeholder = "Contact No" })
+        </div>
+
+        <br />
+        <div class="col-md-3">
+            <label>Enable Consumer for Tax Payment</label><span style="color:red">*</span>
+            <input type="checkbox" class="form-check-input" id="PM_SFlag" />
+        </div>
+        <div class="col-md-3">
+            <label>Tax Payment date from</label><span style="color:red">*</span>
+            @Html.TextBoxFor(m => m.PM_TaxDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @placeholder = "Rcpt Date", @type = "date" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-3">
+            <br />
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" id="btnInsUp" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+    $('.select2').select2();
+</script>
+<script src="~/Scripts/AppScript/UpdateForConsumerTaxPayment.js"></script>

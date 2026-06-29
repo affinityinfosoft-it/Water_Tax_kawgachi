@@ -1,0 +1,139 @@
+﻿@using BObject;
+@using ERP.DataAccess;
+@using ERP.Models;
+@{ List<MenuMasterModel> menuList = ERP.Controllers.BaseController.BuildMenu(((UserRoleDetails)System.Web.HttpContext.Current.Session["UserModel"]).UserId); }
+<style>
+    .dropdown-menu {
+        position: absolute;
+        z-index: 1000;
+        display: none;
+        min-width: 10rem;
+        padding: 0.5rem 0;
+        margin: 0;
+        font-size: 1rem;
+        color: #91a0af;
+        text-align: left;
+        list-style: none;
+        background-color: #0d6efd;
+        background-clip: padding-box;
+        border: 0px solid rgba(0,0,0,.15);
+        border-radius: 0.25rem;
+    }
+
+    .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.25rem 1rem;
+        clear: both;
+        font-weight: 400;
+        color: white;
+        text-align: inherit;
+        text-decoration: none;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+    }
+</style>
+<nav class="shadow-lg navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main_nav">
+            @*<ul class="navbar-nav">
+                    <li class="nav-item active"> <a class="nav-link" href="#">Home </a> </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Admin</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"> Layout </a></li>
+                            <li><a class="dropdown-item" href="#"> Menu </a></li>
+                            <li><a class="dropdown-item" href="#"> Access Right </a>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Treeview menu  </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"> Dropdown item 1 </a></li>
+                            <li>
+                                <a class="dropdown-item" href="#"> Dropdown item 2 &raquo; </a>
+                                <ul class="submenu dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Submenu item 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Submenu item 2</a></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">Submenu item 3 &raquo; </a>
+                                        <ul class="submenu dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Multi level 1</a></li>
+                                            <li><a class="dropdown-item" href="#">Multi level 2</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Submenu item 4</a></li>
+                                    <li><a class="dropdown-item" href="#">Submenu item 5</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="#"> Dropdown item 3 </a></li>
+                            <li><a class="dropdown-item" href="#"> Dropdown item 4 </a>
+                        </ul>
+                    </li>
+                </ul>*@
+            <ul class="navbar-nav">
+                @foreach (var mp in menuList.Where(p => p.IsBaseMenu == true || p.IsMenu == true && p.IsSubMenu == false))
+                {
+                    if (mp.IsMenu == true)
+                    {
+    <li class="nav-item active"> <a class="nav-link" href="@mp.ActionUrl">@mp.MenuName</a></li> }
+                    else if (mp.IsBaseMenu == true && mp.IsSubMenu == false)
+                    {
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@mp.MenuName</a>
+        @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+        {
+@:<ul class="dropdown-menu">
+}
+        @RenderMenuItem(menuList, mp)
+        @if (menuList.Count(p => p.IsBaseMenu == mp.IsBaseMenu) > 0)
+        {
+@:</ul>
+}
+    </li>}
+                }
+            </ul>
+
+        </div> <!-- navbar-collapse.// -->
+        <div style="float: right;">
+            <span>
+                <a href="javascript:void(0)" class="active" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#Logoutmodal">
+                    <img src="~/Logo/logout.png" style="width:40px;height:40px;" />
+                </a>
+            </span>
+            @*<span class="link-danger">@HttpContext.Current.User.Identity.Name</span>*@
+        </div>
+    </div> <!-- container-fluid.// -->
+</nav>
+
+@helper RenderMenuItem(List<MenuMasterModel> menuList, MenuMasterModel mi)
+{foreach (var cp in menuList.Where(p => p.ParentMenuId == mi.MenuId))
+                    {
+                        if (cp.IsSubMenu == true && cp.IsBaseMenu == false)
+                        {
+                            if (cp.IsActive == true)
+                            {
+    <li><a class="dropdown-item" href="@cp.ActionUrl"> @cp.MenuName </a></li> }
+                        }
+                        else
+                        {
+    @:<li>
+        <a class="dropdown-item" href="#"> @cp.MenuName &raquo; </a> }
+                            if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+                            {
+        @:<ul class="submenu dropdown-menu">
+        }
+@RenderMenuItem(menuList, cp) if (menuList.Count(p => p.IsBaseMenu == cp.IsBaseMenu) > 0)
+                    {
+@:</ul>
+}
+else
+{
+@:</li>
+}
+}
+}

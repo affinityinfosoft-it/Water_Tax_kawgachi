@@ -1,0 +1,59 @@
+﻿@model BObject.ItemMaster_IM
+
+@{
+    ViewBag.Title = "Beneficiary Fixed Rate List";
+}
+
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+<a href="Item" style="text-decoration:none;" class="btn btn-primary">NEW ITEM</a>
+<div class="row">
+    <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+        <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true">
+            <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th>Sl</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Type</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                }
+                @foreach (var item in Model.ItemList)
+                {
+                    <tr>
+                        <td></td>
+                        <td>@i</td>
+                        <td>@item.IM_ItemCode</td>
+                        <td>@item.IM_ItemName</td>
+                        <td>@item.IM_Unit</td>
+                        <td>@item.IM_Rate</td>
+                        <td>@item.IM_Type</td>
+                        <td>
+                            <a href="/Master/Item/@item.IM_ID" style="text-decoration:none;">
+                                <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" onclick="DeleteItem(@item.IM_ID);" style="text-decoration:none;">
+                                <img src="~/Logo/Delete.png" width="30" height="30" title="Delete" />
+                            </a>
+                        </td>
+                    </tr>
+                    i = i + 1;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/data-table/bootstrap-table.js"></script>
+<script src="~/Scripts/AppScript/Item.js"></script>

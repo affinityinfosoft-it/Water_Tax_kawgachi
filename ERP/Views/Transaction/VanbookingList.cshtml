@@ -1,0 +1,105 @@
+﻿@model BObject.VanBooking_VB
+@{ ViewBag.Title = "Van Booking List"; }
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-lg-3">
+        <div class="form-group">
+            <b><label for="fromdates">From Date:</label></b>
+            <input type="date" id="fromdates" name="fromdates" class="form-control DatePick" placeholder="__/__/____" value="@Model.fromdates" />
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <b><label for="fromdates">To Date:</label></b>
+            <input type="date" id="todates" name="todates" class="form-control DatePick" placeholder="__/__/____" value="@Model.todates" />
+        </div>
+    </div>
+    <div class="col-lg-3 ">
+        <div class="form-group">
+            <b><label for="partyname">Applicant Code:</label></b>
+            <input type="text" id="AP_Code" name="PT_PtyCode" class="form-control" value="@Model.AP_Code" />
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div style="height:25px"></div>
+        <input style=" width: 225px" type="button" name="btnSearch" value="Show" onclick="fetchData();" id="btnSubmit" class="btn btn-success float-end" />
+    </div>
+</div>
+<br />
+@if ((bool)Session["CanAdd"] == true)
+{
+<a href="/Transaction/Vanbooking" style="text-decoration:none;" class="btn btn-primary">New Registration</a>}
+<hr />
+
+@if ((bool)Session["CanView"] == true)
+{
+<div class="row">
+    <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+        <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+            <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th>Sl.</th>
+                    <th>Code</th>
+                    <th>Applicant Name</th>
+                    <th>Mobile No</th>
+                    <th>RegDate</th>
+                    <th>FromDate</th>
+                    <th>FromTime</th>
+                    <th>ToDate</th>
+                    <th>ToTime</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>Print</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1; }
+                @foreach (var item in Model.ListBooking)
+                {
+<tr>
+    <td></td>
+    <td>@i</td>
+    <td>@item.AP_Code</td>
+    <td>@item.AP_Name</td>
+    <td>@item.AP_Mobile</td>
+    <td>@item.RegDate.ToShortDateString()</td>
+    <td>@item.FromDate.ToShortDateString()</td>
+    <td>@item.FromTime</td>
+    <td>@item.ToDate.ToShortDateString()</td>
+    <td>@item.ToTime</td>
+    <td>@item.Qty</td>
+    <td>@item.Amount</td>
+    <td>
+        <a href="/Report/VanBooking/@item.AP_ID" target="_blank" style="text-decoration:none;">
+            <img src="~/Logo/Printer.png" width="30" height="30" title="Print" />
+        </a>
+    </td>
+    <td>
+        <a href="/Transaction/Vanbooking/@item.AP_ID" style="text-decoration:none;">
+            <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+        </a>
+    </td>
+    <td>
+        <a href="javascript:void(0)" onclick="DeleteVanBooking(@item.AP_ID);" style="text-decoration:none;">
+            <img src="~/Logo/Delete.png" width="30" height="30" title="Delete" />
+        </a>
+    </td>
+</tr>i = i + 1;
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div> }
+else
+{
+<div class="alert-danger">
+    <h3>You Are Not Authorize....................!</h3>
+</div>}
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/data-table/bootstrap-table.js"></script>
+
+<script src="~/Scripts/AppScript/VanBooking.js"></script>

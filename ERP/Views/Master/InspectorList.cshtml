@@ -1,0 +1,84 @@
+﻿@model BObject.Inspector_Master
+@{ ViewBag.Title = "Inspector List"; }
+
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@if ((bool)Session["CanAdd"] == true)
+{
+<a href="/Master/InspectorMaster" style="text-decoration:none;" class="btn btn-primary">Add Inspector</a>}
+<hr />
+
+@if ((bool)Session["CanView"] == true)
+{
+    <div class="row">
+        <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+            <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th data-checkbox="true"></th>
+                        <th>Sl.</th>
+                        <th>Inspector Code</th>
+                        <th>Inspector Name</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+
+                    @foreach (var item in Model.InspectorList)
+                    {
+    <tr>
+        <td></td>
+        <td>@i</td>
+        <td>@item.ins_code</td>
+        <td>@item.ins_name</td>
+
+
+        @if ((bool)Session["CanEdit"] == true)
+        {
+<td>
+    <a href="/Master/InspectorMaster/@item.Ins_Id" style="text-decoration:none;">
+        <img src="~/Logo/Edit.png" width="30" height="30" title="Edit" />
+    </a>
+</td> }
+                    else
+                    {
+<td>
+    <a href="javascript:void(0)" style="text-decoration:none;">
+        <img src="~/Logo/Edit.png" width="30" height="30" title="Edit Not Authorized" />
+    </a>
+</td>}
+
+        @if ((bool)Session["CanDelete"] == true)
+        {
+<td>
+    <a href="javascript:void(0)" onclick="DeleteInspector(@item.Ins_Id);" style="text-decoration:none;">
+        <img src="~/Logo/Delete.png" width="30" height="30" title="Delete" />
+    </a>
+</td> }
+                    else
+                    {
+<td>
+    <a href="javascript:void(0)" style="text-decoration:none;">
+        <img src="~/Logo/Delete.png" width="30" height="30" title="Delete Not Authorized" />
+    </a>
+</td>}
+
+
+    </tr>i = i + 1;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div> }
+                else
+                {
+    <div class="alert-danger">
+        <h3>You Are Not Authorize....................!</h3>
+    </div>}
+
+
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/data-table/bootstrap-table.js"></script>
+<script src="~/Scripts/AppScript/Inspector.js"></script>

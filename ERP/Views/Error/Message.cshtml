@@ -1,0 +1,12 @@
+﻿@Model ERP.Models.StatusResponse
+@{
+    ViewBag.Title = "Message";
+}
+<h1 class="text-danger">Error.</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-danger">Error.@Model.Message</h1>
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+        @Html.ActionLink("Back", @Model.ActionName, @Model.ControllerName, new { @class = "btn btn-info" })
+    </div>
+</div>

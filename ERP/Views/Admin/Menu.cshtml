@@ -1,0 +1,84 @@
+﻿@model BObject.MenuMasterModel
+@{
+    ViewBag.Title = "Menu Entry";
+}
+@*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 0px !important;
+    }
+</style>*@
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+@using (Html.BeginForm("Menu", "Admin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+@Html.HiddenFor(m=>m.MenuId)
+<div class="row">
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.MenuName, new { @class = "form-label" })<span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.MenuName, new { @class = "form-control", @placeholder = "Ex - Session" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.ActionUrl, new { @class = "form-label" })<span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.ActionUrl, new { @class = "form-control", @placeholder = "Ex - /Controller/Action" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.ParentMenuName, new { @class = "form-label" })<span style="color:red">*</span>
+        @Html.DropDownList("ParentMenuId", null, "Select Menu", new { @class = "form-control" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.DisplayPosition, new { @class = "form-label" })<span style="color:red">*</span>
+        @Html.TextBoxFor(m => m.DisplayPosition, new { @class = "form-control",@type="number", @placeholder = "Ex - 5" })
+    </div>
+</div>
+<br />
+<div class="row">
+    <b>Select type of Menu:</b>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.IsBaseMenu, new { @class = "form-label" })<span style="color:red">*</span>
+        <br />
+        @Html.CheckBoxFor(m => m.IsBaseMenu, new { @class="form-check-input"})
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.IsSubMenu, new { @class = "form-label" })<span style="color:red">*</span>
+        <br />
+        @Html.CheckBoxFor(m => m.IsSubMenu, new { @class = "form-check-input" })
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(m => m.IsMenu, new { @class = "form-label" })<span style="color:red">*</span>
+        <br />
+        @Html.CheckBoxFor(m => m.IsMenu, new { @class = "form-check-input" })
+    </div>
+
+</div>
+<br />
+<div class="row">
+    <div class="col-md-9">
+        <a href="/Admin/MenuList">
+            <img src="~/Logo/back.png" width="20" height="20" />
+            Back To List
+        </a>
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-info">REFRESH</button>
+        <button type="submit" class="btn btn-primary">@ViewBag.Button</button>
+    </div>
+</div>
+}
+@Scripts.Render("~/bundles/jquery")
+
+<script>
+    $('.select2').select2();
+    
+</script>
+@if (TempData.ContainsKey("Message"))
+{
+    <script type="text/javascript">
+        //success / error / warning / info
+        toastr.warning("@TempData["Message"]")
+    </script>
+}

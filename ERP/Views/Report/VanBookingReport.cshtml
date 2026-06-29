@@ -1,0 +1,99 @@
+﻿
+@{ ViewBag.Title = "Van Booking Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 0px !important;
+    }
+</style>
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+<div class="page-body-height">
+    <hr />
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <b><label for="fromdate">From Date:</label></b>
+                <input type="date" id="fromdate" name="fromdate" class="form-control DatePick" placeholder="__/__/____" />
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <b><label for="fromdate">To Date:</label></b>
+                <input type="date" id="todate" name="todate" class="form-control DatePick" placeholder="__/__/____" />
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <b><label for="AM_AreaID">Area Name:</label></b>
+            @Html.DropDownList("AM_AreaID", (IEnumerable<SelectListItem>)ViewBag.AM_AreaID, "Select Area", new { @class = "form-control select2", required = "required" })
+        </div>
+        <div class="col-md-3">
+            <b><label for="PM_ParaId">Para Name:</label></b>
+            @Html.DropDownList("PM_ParaId", (IEnumerable<SelectListItem>)ViewBag.PM_ParaId, "Select Para", new { @class = "form-control select2", required = "required" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-lg-5">
+            <div class="form-group">
+                <div style="height:25px"></div>
+                <input style=" width: 140px" type="submit" name="btnSearch" value="Submit" onclick="redirectUrl();" id="btnSubmit" class="btn btn-success" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <a href="/Home/Index">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To Home
+            </a>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.DatePick').datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        minDate: '01/01/1950',
+                        yearRange: "-100:+0",
+                    });
+                });
+
+                function redirectUrl() {
+                    var fromdate = $('#fromdate').val();
+                    var todate = $('#todate').val();
+                    var AM_AreaID = $('#AM_AreaID').val();
+                    var PM_ParaId = $('#PM_ParaId').val();
+                    var url = "../VanBookingReport.aspx?fromdate=" + fromdate + "&todate=" + todate + "&AM_AreaID=" + AM_AreaID + "&PM_ParaId=" + PM_ParaId + "&id=" + 1;
+                    var WindowDimensions = "toolbars=no,menubar=no,location=no,titlebar=no,scrollbars=yes,resizable=yes,status=yes"
+                    var PopUp = window.open(url, "MyReportWindow", WindowDimensions);
+                    if (PopUp.outerWidth < screen.availWidth || PopUp.outerHeight < screen.availHeight) {
+                        PopUp.moveTo(25, 50);
+                        PopUp.resizeTo(screen.availWidth - 10, screen.availHeight - 10);
+                    }
+                }
+                function Reset() {
+                    var url = window.location.href;
+                    window.location.href = url;
+                    return false;
+                }
+    </script>
+
+</div>
+@Scripts.Render("~/bundles/jquery")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+        $('.select2').select2();
+</script>

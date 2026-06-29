@@ -1,0 +1,184 @@
+﻿@model BObject.PartyLedger_PL
+@{
+    Layout = null;
+    float total = 0;
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>ConsumerPayment Receipt</title>
+    <link href="~/Content/EditableInvoice/css/print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/EditableInvoice/css/style.css" rel="stylesheet" />
+    <script src="~/Content/EditableInvoice/js/jquery-1.3.2.min.js"></script>
+    <script src="~/Content/EditableInvoice/js/example.js"></script>
+</head>
+<body>
+    <br />
+    <div id="page-wrap" class="card">
+        @*<input type="hidden" id="TAmount" value="@Model.PM_PaidAmt" />*@
+        <h2 style="text-align:center">KOWGACHI-I VILLAGE LEVEL WATER SUPPLY AND SANITATION COMMITTEE</h2>
+        <h3 style="text-align:center">Bankpally, Shyamnagar North 24 Pgs</h3>
+        <h3 style="text-align:center">Phone No : 7980607071</h3>
+        <hr />
+        <h3 style="text-align:center">Consumer Payment Receipt</h3>
+        <hr />
+        <div class="row">
+
+            @*@foreach (var item in Model.RepInsItemList)
+            {
+                if (Model.GS_BillNo !="")
+                {
+                    <span>Bill No : @Model.GS_BillNo</span>
+                }
+            }*@
+
+            <span style="padding-right:150px"><b>Receipt Number:</b>@Model.PL_RcptCode </span>
+            <span style="padding-left:5px"><b>Date :</b> @Model.PL_BillDate.ToShortDateString()</span>
+        </div><br />
+
+              <div class="row">
+                  <p><b>Consumer ID :</b> @Model.PL_PartyCode</p>
+                  <p><b>Name Of Consumer :</b> @Model.PM_PartyName</p>
+                  <p><b>Father / Husband :</b> @Model.PM_FHName</p>
+                  <p><b>Area :</b> @Model.AM_AreaName , <b>Para :</b> @Model.PM_ParaName</p>
+
+              </div>
+        <hr />
+
+        <div class="row">
+            <table class="table" width="100%">
+                <tr>
+                    <th><b>Bill No</b></th>
+                    <th><b>Bill Date</b></th>
+                    <th><b>Bill Amount</b></th>
+                    <th style="padding-right:100px"><b>Paid Amount</b></th>
+                </tr>
+                @foreach (var item in Model.PartyLadgerList)
+                {
+    <tr>
+        <td>@item.PL_BillNo</td>
+        <td>@item.PL_BillDate.ToShortDateString()</td>
+        <td align="right">@item.PL_BillAmount</td>
+        <td align="center">@item.PL_PaidAmount</td>
+
+    </tr>
+total += (float)@item.PL_PaidAmount;
+}
+
+            </table>
+        </div>
+
+        <div class="row" style="padding-left:350px">
+
+            <p style="padding-right:60px" id="totalamunt"><b>Total :</b>@Math.Round(((float)Model.PL_BillAmount))</p>
+            <p style="padding-right:60px" id="paidamount"><b>Paid :</b>@((float)Model.PL_PaidAmount)</p>
+
+            <input type="hidden" id="TAmount" value="@Model.PL_PaidAmount" />
+
+            @if (Model.PL_RcptType == "CA")
+            {
+    <p><b>Paid Mode :</b> Cash</p> }
+else if (Model.PL_RcptType == "BA")
+{
+    <p>Paid Mode : Bank Transfer</p> }
+else
+{
+    <p>Paid Mode : Online</p>}
+
+        </div><br />
+        <span>Received Rupees :</span>
+        <span id="WordAmount"></span>
+        <hr />
+        <br /><br />
+        <div>
+            <span>Dealing Assistant With Seal</span>
+            @*<span style="padding-left:195px">Printed By : @ViewBag.FirstName</span>*@
+        </div>
+    </div>
+    <script>
+        function number2text(d) {
+            var fraction = Math.round(frac(d) * 100);
+            var f_text = "";
+
+            if (fraction > 0) {
+                f_text = "AND " + convert_number(fraction) + " PAISE";
+            }
+
+            return convert_number(d) + " RUPEE " + f_text + " ONLY";
+        }
+
+        function frac(f) {
+            return f % 1;
+        }
+
+        function convert_number(number) {
+            if ((number < 0) || (number > 999999999)) {
+                return "NUMBER OUT OF RANGE!";
+            }
+            var Gn = Math.floor(number / 10000000);  /* Crore */
+            number -= Gn * 10000000;
+            var kn = Math.floor(number / 100000);     /* lakhs */
+            number -= kn * 100000;
+            var Hn = Math.floor(number / 1000);      /* thousand */
+            number -= Hn * 1000;
+            var Dn = Math.floor(number / 100);       /* Tens (deca) */
+            number = number % 100;               /* Ones */
+            var tn = Math.floor(number / 10);
+            var one = Math.floor(number % 10);
+            var res = "";
+
+            if (Gn > 0) {
+                res += (convert_number(Gn) + " CRORE");
+            }
+            if (kn > 0) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(kn) + " LAKH");
+            }
+            if (Hn > 0) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(Hn) + " THOUSAND");
+            }
+
+            if (Dn) {
+                res += (((res == "") ? "" : " ") +
+                    convert_number(Dn) + " HUNDRED");
+            }
+
+
+            var ones = Array("", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN");
+            var tens = Array("", "", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY");
+
+            if (tn > 0 || one > 0) {
+                if (!(res == "")) {
+                    res += " AND ";
+                }
+                if (tn < 2) {
+                    res += ones[tn * 10 + one];
+                }
+                else {
+
+                    res += tens[tn];
+                    if (one > 0) {
+                        res += ("-" + ones[one]);
+                    }
+                }
+            }
+
+            if (res == "") {
+                res = "zero";
+            }
+            return res;
+        }
+        $(document).ready(function () {
+            document.getElementById('WordAmount').innerHTML = number2text(document.getElementById('TAmount').value);
+            window.print();
+        });
+    </script>
+</body>
+
+</html>
+
+@*consumer payment*@
+

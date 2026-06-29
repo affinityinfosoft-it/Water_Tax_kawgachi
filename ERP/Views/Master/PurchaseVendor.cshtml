@@ -1,0 +1,79 @@
+﻿@model BObject.PurchaseVendorMaster_PVM
+@{
+    ViewBag.Title = "PurchaseVendor";
+}
+
+<h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+
+@using (Html.BeginForm("PurchaseVendor", "Master", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.PVM_VendorID)
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_VendorCode, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_VendorCode, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_VendorName, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_VendorName, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_Address1, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_Address1, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_Address2, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_Address2, new { @class = "form-control", @placeholder = "Address" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_City, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_City, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_PIN, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_PIN, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_Phone, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_Phone, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_FaxNo, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_FaxNo, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(m => m.PVM_Email, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.PVM_Email, new { @class = "form-control", @placeholder = "Company Name" })
+        </div>
+        @*<div class="col-md-3">
+                @Html.LabelFor(m => m.PVM_SubAccID, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.PVM_SubAccID, new { @class = "form-control", @placeholder = "Company Name" })
+            </div>*@
+
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-md-8">
+            <a href="/Master/PurchaseVendorList">
+                <img src="~/Logo/back.png" width="20" height="20" />
+                Back To List
+            </a>
+        </div>
+        <div class="col-md-4">
+            <button type="button" onclick="Refresh();" class="btn btn-info">REFRESH</button>
+            <button type="button" onclick="BtnSaveUpdate();" class="btn btn-primary">@ViewBag.Button</button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+
+<script src="~/Scripts/AppScript/PurcheseVendor.js"></script>

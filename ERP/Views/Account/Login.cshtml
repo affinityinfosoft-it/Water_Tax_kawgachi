@@ -1,0 +1,152 @@
+﻿@model ERP.Models.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @Styles.Render("~/Content/css")
+
+    <link href="~/Content/Login.css" rel="stylesheet" />
+    <link href="~/Content/Loader.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="loader" id="AjaxLoader" style="display:none;">
+        <div class="strip-holder">
+            <div class="strip-1"></div>
+            <div class="strip-2"></div>
+            <div class="strip-3"></div>
+        </div>
+    </div>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <!-- Icon -->
+            <div class="fadeIn first">
+                @*<img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />*@
+                <h2>Sign - In</h2>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+            <!-- Login Form -->
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "form" }))
+            {
+        @Html.AntiForgeryToken()
+                        <input name="ReturnUrl" id="ReturnUrl" type="hidden" value="@ViewBag.ReturnUrl" />
+                        <div class="row">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "fadeIn second", @placeholder = "User Name" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Password, new { @class = "fadeIn third", @placeholder = "Password", @type = "password", @onchange = "PasswordOnChngCompanyList()" })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-10">
+                                @* @Html.DropDownList("CM_ID", null, "Select Company", new { @class = "fadeIn fourth" })*@
+                                <select class="fadeIn fourth" id="CM_ID" name="CM_ID" required>
+                                    <option value="">Select Company</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-10">
+                                @*<input type="submit" class="fadeIn fourth" value="Log In">*@
+                                <button id="btnLogin" class="fadeIn fourth btn btn-primary" type="button" onclick="LoginOnclick();">
+                                    LOG IN
+                                </button>
+                                <button id="btnLoading" class="btn btn-primary" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                        </div>            }
+            <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="/Account/Registration">Not a member? Sign Up</a>
+        </div>
+           
+            @*<div id="formFooter">
+                <a class="underlineHover" href="/Account/PasswordOnChngCompanyList">Forgot Password</a>
+            </div>*@
+
+             </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        $(document).ready(function () {
+            $("#btnLogin").attr("hidden", false);
+            $("#btnLoading").attr("hidden", true);
+        });
+        function PasswordOnChngCompanyList() {
+            $('#AjaxLoader').show();
+            var obj = {
+                Email: $('#Email').val(),
+                Password: $('#Password').val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Account/PasswordOnChngCompanyList",
+                data: JSON.stringify(obj),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: "true",
+                cache: "false",
+                success: function (data) {
+                    $('#AjaxLoader').hide();
+                    $('#CM_ID').children().remove().end()
+                        .append('<option selected value="0">Select Company</option>');
+                    $.each(data, function (key, item) {
+                        $("#CM_ID").append($("<option></option>").val(item.CM_ID).html(item.name));
+                    })
+
+                }
+            });
+        }
+        function LoginOnclick() {
+            if (validation()==true) {
+                $("#btnLogin").attr("hidden", true);
+                $("#btnLoading").attr("hidden", false);
+                $('#form').submit();
+            }
+          
+        }
+        function validation() {
+            if ($('#Email').val()=="") {
+                alert("Please Enter User Id");
+                return false;
+            }
+            else if ($('#Password').val() == "") {
+                alert("Please Enter Password");
+                return false;
+            }
+            else if ($('#CM_ID').val() == "" || $('#CM_ID').val()==0) {
+                alert("Please Select Company");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>

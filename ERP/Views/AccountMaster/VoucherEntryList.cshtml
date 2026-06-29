@@ -1,0 +1,74 @@
+﻿@model BObject.AccountModel.AccountLedger
+@{
+    ViewBag.Title = @Model.VoucherType+" Voucher Entry List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-body-height">
+    @using (Html.BeginForm("VoucherEntryList", "AccountMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form", autocomplete = "off" }))
+    {
+        <input type="hidden" id="LD_VoucherTypeId" name="LD_VoucherTypeId" value="@Model.LD_VoucherTypeId" />
+        <h2 style="background-color: aliceblue; text-align: center;">@ViewBag.Title</h2>
+        <div class="clearfix mb-3">
+            @if ((bool)Session["CanAdd"] == true)
+            {
+                <a href="/AccountMaster/VoucherEntry?VoucherTypeId=@Model.LD_VoucherTypeId" class="btn btn-primary float-end" style="text-decoration:none;">ADD</a>
+            }
+        </div>
+        <hr />
+        <input type="hidden" id="LD_VoucherTypeId" name="LD_VoucherTypeId" value="@Model.LD_VoucherTypeId" />
+
+        if ((bool)Session["CanView"] == true)
+        {
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+                    <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                        <thead>
+                            <tr>
+                                <th data-checkbox="true"></th>
+                                <th>Sl.</th>
+                                <th>VoucherNo</th>
+                                <th>Date</th>
+                                <th>Narration</th>
+                                <th>CrAmount</th>
+                                <th>DrAmount</th>
+                                <th>Print</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1; }
+                            @foreach (var item in Model.AccountLedgerList)
+                            {
+                            <tr>
+                                <td></td>
+                                <td>@i</td>
+                                <td>@item.LD_VoucherNo</td>
+                                <td>@item.LD_DateS</td>
+                                <td>@item.LD_Narration</td>
+                                <td>@item.LD_CrAmount</td>
+                                <td>@item.LD_DrAmount</td>
+                                <td>
+                                    <a href="/VoucherPrint.aspx?LD_LedgerID=@item.LD_LedgerID" target="_blank" style="text-decoration:none;">
+                                        <img src="~/Logo/Printer.png" width="30" height="30" title="Print" />
+                                    </a>
+                                </td>
+
+
+                            </tr>
+                                i = i + 1;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div> }
+        else
+        {
+            <div class="alert-danger">
+                <h3>You Are Not Authorize....................!</h3>
+            </div>}
+        @Scripts.Render("~/bundles/jquery")
+        <script src="~/Scripts/data-table/bootstrap-table.js"></script>
+    }
+</div>
+
