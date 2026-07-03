@@ -68,6 +68,16 @@ namespace ERP.Areas.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("login")]
+        public IHttpActionResult Login(LoginRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var result = dal.Login(request);
+
+            return Ok(result);
+        }
     }
 }
