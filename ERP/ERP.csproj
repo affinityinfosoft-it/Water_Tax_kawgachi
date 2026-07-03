@@ -225,6 +225,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\API\Controller\PartyLoginController.cs" />
+    <Compile Include="Areas\API\DAL\PartyLoginDAL.cs" />
+    <Compile Include="Areas\API\Helper\SMSHelper.cs" />
+    <Compile Include="Areas\API\Model\Request\CreatePasswordRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\LoginRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\SendOTPRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\VerifyOTPRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\VerifyPartyRequest.cs" />
+    <Compile Include="Areas\API\Model\Response\ApiResponse.cs" />
     <Compile Include="Beneficary Register.aspx.cs">
       <DependentUpon>Beneficary Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1295,7 +1304,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\" />
+    <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Document\Img\Company\" />
     <Folder Include="Image\" />
     <Folder Include="Views\JQuery\" />
@@ -1313,6 +1322,10 @@
     <ProjectReference Include="..\BObject\BObject.csproj">
       <Project>{cdf4c3dc-64a7-49aa-a93f-f7984a1991ad}</Project>
       <Name>BObject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAccess\DAccess.csproj">
+      <Project>{10588B7E-EE04-4C83-AA5C-53BAA6B52457}</Project>
+      <Name>DAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
