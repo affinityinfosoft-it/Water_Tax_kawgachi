@@ -89,23 +89,23 @@ namespace ERP.Areas.API.DAL
             return response;
         }
 
-        //private void SaveOTP(string partyCode, string otp)
-        //{
-        //    using (SqlConnection con = new SqlConnection(conString))
-        //    {
-        //        SqlCommand cmd = new SqlCommand("SP_APISaveOTP", con);
+        private void SaveOTP(string partyCode, string otp)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand("SP_APISaveOTP", con);
 
-        //        cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.StoredProcedure;
 
-        //        cmd.Parameters.AddWithValue("@PartyCode", partyCode);
+                cmd.Parameters.AddWithValue("@PartyCode", partyCode);
 
-        //        cmd.Parameters.AddWithValue("@OTP", otp);
+                cmd.Parameters.AddWithValue("@OTP", otp);
 
-        //        con.Open();
+                con.Open();
 
-        //        cmd.ExecuteNonQuery();
-        //    }
-        //}
+                cmd.ExecuteNonQuery();
+            }
+        }
         public ApiResponse VerifyOTP(VerifyOTPRequest request)
         {
             ApiResponse response = new ApiResponse();
@@ -159,6 +159,44 @@ namespace ERP.Areas.API.DAL
         }
 
 
+        public ApiResponse Login(LoginRequest request)
+        {
+            ApiResponse response = new ApiResponse();
 
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand("SP_APILogin", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PartyCode", request.PartyCode);
+                cmd.Parameters.AddWithValue("@Password", request.Password);
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    response.Success = Convert.ToInt32(dr["Status"]) == 1;
+                    response.Message = dr["Message"].ToString();
+
+                    if (response.Success)
+                    {
+                        response.Data = new
+                        {
+                            Token = dr["AccessToken"].ToString(),
+                            PartyCode = dr["PM_PartyCode"].ToString(),
+                            PartyName = dr["PM_PartyName"].ToString(),
+                            Address = dr["PM_Address"].ToString(),
+                            City = dr["PM_City"].ToString(),
+                            Mobile = dr["PM_MobNo"].ToString(),
+                            Email = dr["PM_Email"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return response;
+        }
     }
 }
