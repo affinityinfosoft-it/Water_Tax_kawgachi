@@ -88,7 +88,6 @@ namespace ERP.Areas.API.DAL
             response.Data = otp;   // Return OTP only for testing
             return response;
         }
-
         private void SaveOTP(string partyCode, string otp)
         {
             using (SqlConnection con = new SqlConnection(conString))
@@ -131,7 +130,6 @@ namespace ERP.Areas.API.DAL
 
             return response;
         }
-
         public ApiResponse CreatePassword(CreatePasswordRequest request)
         {
             ApiResponse response = new ApiResponse();
@@ -157,8 +155,6 @@ namespace ERP.Areas.API.DAL
 
             return response;
         }
-
-
         public ApiResponse Login(LoginRequest request)
         {
             ApiResponse response = new ApiResponse();
@@ -187,10 +183,16 @@ namespace ERP.Areas.API.DAL
                             Token = dr["AccessToken"].ToString(),
                             PartyCode = dr["PM_PartyCode"].ToString(),
                             PartyName = dr["PM_PartyName"].ToString(),
+                            FtahersName = dr["PM_FHName"].ToString(),
                             Address = dr["PM_Address"].ToString(),
                             City = dr["PM_City"].ToString(),
                             Mobile = dr["PM_MobNo"].ToString(),
-                            Email = dr["PM_Email"].ToString()
+                            Email = dr["PM_Email"].ToString(),
+                            Pin   = dr["PM_PIN"].ToString(),
+                            AadhaarNo = dr["AadhaarNo"].ToString(),
+                            AreaName = dr["AM_AreaName"].ToString(),
+                            ParaName = dr["PM_ParaName"].ToString()
+
                         };
                     }
                 }
@@ -198,5 +200,7 @@ namespace ERP.Areas.API.DAL
 
             return response;
         }
+
+
     }
 }
