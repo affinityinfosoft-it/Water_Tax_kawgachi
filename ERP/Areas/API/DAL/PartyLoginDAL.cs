@@ -10,7 +10,7 @@ namespace ERP.Areas.API.DAL
 {
     public class PartyLoginDAL
     {
-        private readonly string conString =
+        public readonly string conString =
             ConfigurationManager.ConnectionStrings["ERP_DB_Conn"].ConnectionString;
 
         public ApiResponse VerifyParty(VerifyPartyRequest request)
@@ -183,7 +183,7 @@ namespace ERP.Areas.API.DAL
                             Token = dr["AccessToken"].ToString(),
                             PartyCode = dr["PM_PartyCode"].ToString(),
                             PartyName = dr["PM_PartyName"].ToString(),
-                            FtahersName = dr["PM_FHName"].ToString(),
+                            FathersName = dr["PM_FHName"].ToString(),
                             Address = dr["PM_Address"].ToString(),
                             City = dr["PM_City"].ToString(),
                             Mobile = dr["PM_MobNo"].ToString(),
