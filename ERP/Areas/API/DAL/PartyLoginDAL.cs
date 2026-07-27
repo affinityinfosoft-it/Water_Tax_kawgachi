@@ -200,7 +200,33 @@ namespace ERP.Areas.API.DAL
 
             return response;
         }
+        public ApiResponse UpdatePassword(string partyCode, UpdatePasswordRequest request)
+        {
+            ApiResponse response = new ApiResponse();
 
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand("SP_APIUpdatePassword", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PartyCode", partyCode);
+                cmd.Parameters.AddWithValue("@CurrentPassword", request.CurrentPassword);
+                cmd.Parameters.AddWithValue("@NewPassword", request.NewPassword);
+                cmd.Parameters.AddWithValue("@ConfirmPassword", request.ConfirmPassword);
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    response.Success = Convert.ToInt32(dr["Status"]) == 1;
+                    response.Message = dr["Message"].ToString();
+                }
+            }
+
+            return response;
+        }
 
     }
 }

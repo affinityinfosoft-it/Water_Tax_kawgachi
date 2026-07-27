@@ -1,4 +1,5 @@
 ﻿using ERP.Areas.API.DAL;
+using ERP.Areas.API.Helper;
 using ERP.Areas.API.Model.Request;
 using ERP.Areas.API.Model.Response;
 using System.Web.Http;
@@ -78,6 +79,42 @@ namespace ERP.Areas.API.Controllers
             var result = dal.Login(request);
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("update-password")]
+        public IHttpActionResult UpdatePassword(UpdatePasswordRequest request)
+        {
+            ApiResponse response = new ApiResponse();
+
+            var auth = Request.Headers.Authorization;
+
+            if (auth == null)
+            {
+                response.Success = false;
+                response.Message = "Authorization Token Missing.";
+                return Ok(response);
+            }
+
+            if (auth.Scheme != "Bearer")
+            {
+                response.Success = false;
+                response.Message = "Invalid Authorization Type.";
+                return Ok(response);
+            }
+
+            TokenManager tokenManager = new TokenManager();
+
+            ApiResponse token = tokenManager.ValidateToken(auth.Parameter);
+
+            if (!token.Success)
+            {
+                return Ok(token);
+            }
+
+            string partyCode = token.Data.ToString();
+
+            return Ok(dal.UpdatePassword(partyCode, request));
         }
     }
 }
