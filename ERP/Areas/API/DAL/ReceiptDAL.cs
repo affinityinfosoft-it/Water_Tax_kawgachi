@@ -125,7 +125,16 @@ namespace ERP.Areas.API.DAL
 
                             PaidAmount = dr["PL_PaidAmount"] != DBNull.Value
                                 ? Convert.ToDecimal(dr["PL_PaidAmount"])
-                                : 0
+                                : 0,
+                            FromDate = dr["FromDate"] != DBNull.Value
+                            ? Convert.ToDateTime(dr["FromDate"]).ToString("dd-MMM-yyyy")
+                            : "",
+
+                            ToDate = dr["ToDate"] != DBNull.Value
+                            ? Convert.ToDateTime(dr["ToDate"]).ToString("dd-MMM-yyyy")
+                            : "",
+
+
                         };
                     }
                     else
