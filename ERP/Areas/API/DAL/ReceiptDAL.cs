@@ -96,7 +96,7 @@ namespace ERP.Areas.API.DAL
                         response.Data = new
                         {
                             BillNo = dr["PL_BillNo"].ToString(),
-
+                            BillType = dr["BillType"].ToString(),
                             BillDate = dr["PL_BillDate"] != DBNull.Value
                                 ? Convert.ToDateTime(dr["PL_BillDate"]).ToString("dd-MMM-yyyy")
                                 : "",
