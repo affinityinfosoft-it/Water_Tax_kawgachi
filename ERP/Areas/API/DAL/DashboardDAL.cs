@@ -73,10 +73,17 @@ namespace ERP.Areas.API.DAL
                                     ? Convert.ToDecimal(dr["DueAmount"])
                                     : 0,
 
+
                                 DueMonth = dr["DueMonth"] != DBNull.Value
                                     ? Convert.ToInt32(dr["DueMonth"])
                                     : 0,
+                                CurrentMonthDue = dr["CurrentMonthDue"] != DBNull.Value
+                                    ? Convert.ToDecimal(dr["CurrentMonthDue"])
+                                    : 0,
 
+                                OverDue = dr["OverDue"] != DBNull.Value
+                                    ? Convert.ToDecimal(dr["OverDue"])
+                                    : 0,
                                 LastPaidMonth = dr["LastPaidMonth"].ToString(),
 
                                 DueFrom = dr["PT_DtFroms"].ToString(),
