@@ -1467,7 +1467,54 @@ namespace BLogic
             throw new NotImplementedException();
         }
         #endregion
-       
+        public List<T> GetComplaintList<T>
+        (ComplaintMaster_CM TEntity,string SP_Name) where T : class, new()
+        {
+            List<SqlParameter> arrParams =new List<SqlParameter>();
+            arrParams.Add(new SqlParameter("@TransType", "Select"));
+            arrParams.Add(new SqlParameter("@CM_ID", TEntity.CM_ID));
+            arrParams.Add(new SqlParameter("@FyId", TEntity.FyId));
+            SqlParameter OutPutId =new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction =ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+            return common.GetAnyList<T>(arrParams,SP_Name);
+        }
+        public T GetComplaintDetails<T>(ComplaintMaster_CM entity,string SP_Name) where T : class, new()
+        {
+            List<SqlParameter> arrParams =new List<SqlParameter>();
+            arrParams.Add(new SqlParameter("@TransType", "ComplaintDetailsCMS"));
+            arrParams.Add(new SqlParameter("@ComplaintId",entity.CMPL_Id));
+            arrParams.Add(new SqlParameter("@CM_ID",entity.CM_ID));
+            SqlParameter OutPutId =new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction =ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+            return common.GetAnySelectOne<T>(arrParams,SP_Name);
+        }
+        public Int64 UpdateComplaint(ComplaintMaster_CM TEntity, string SP_Name)
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "UpdateComplaint"));
+            arrParams.Add(new SqlParameter("@CMPL_Id", TEntity.CMPL_Id));
+            arrParams.Add(new SqlParameter("@Status", TEntity.CMPL_Status));
+            arrParams.Add(new SqlParameter("@AssignTo", TEntity.CMPL_AssignTo));
+            arrParams.Add(new SqlParameter("@Remarks", TEntity.CMPL_Remarks));
+
+            arrParams.Add(new SqlParameter("@ResolvedDate",
+                TEntity.CMPL_ResolvedDate.HasValue
+                    ? (object)TEntity.CMPL_ResolvedDate.Value
+                    : DBNull.Value));
+
+            arrParams.Add(new SqlParameter("@CM_ID", TEntity.CM_ID));
+            arrParams.Add(new SqlParameter("@FyId", TEntity.FyId));
+            arrParams.Add(new SqlParameter("@UserId", TEntity.UserId));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.InsertAnyMasters(arrParams, SP_Name, OutPutId);
+        }
     }
 }
 

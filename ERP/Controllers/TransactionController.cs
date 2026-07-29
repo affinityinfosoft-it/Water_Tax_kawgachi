@@ -1,4 +1,5 @@
 ﻿using BObject;
+using ERP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -528,6 +529,55 @@ namespace ERP.Controllers
             return View(VanBooking_VB);
         }
         #endregion
+        public ActionResult ComplaintList()
+        {
+            //if (UserModel == null)
+            //    return returnLogin("~/Complaint/ComplaintList");
+            //GetRights("/Complaint/ComplaintList");
+            ComplaintMaster_CM complaint = new ComplaintMaster_CM();
+            complaint.FyId = UserModel.FyId;
+            complaint.CM_ID = UserModel.CM_ID;
+            complaint.ComplaintList =
+            service.GetComplaintList<ComplaintMaster_CM>(complaint,"SP_APIComplaint");
+            return View(complaint);
+        }
+        public ActionResult ComplaintEdit(long id)
+        {
 
+            //if (UserModel == null)
+            //    return returnLogin("~/Complaint/ComplaintList");
+
+            //GetRights("/Complaint/ComplaintList");
+            ComplaintMaster_CM complaint = new ComplaintMaster_CM();
+            complaint.CMPL_Id = id;
+            complaint.CM_ID = UserModel.CM_ID;
+            complaint.FyId = UserModel.FyId;
+            complaint =
+                service.GetComplaintDetails<ComplaintMaster_CM>(complaint,"SP_APIComplaint");
+            return View(complaint);
+
+        }
+        [HttpPost]
+        public ActionResult ComplaintAction(ComplaintMaster_CM obj)
+        {
+            //if (UserModel == null)
+            //    return returnLogin("~/Complaint/ComplaintList");
+
+            obj.CM_ID = UserModel.CM_ID;
+            obj.FyId = UserModel.FyId;
+            obj.UserId = UserModel.UserId;
+
+            Int64 Result = service.UpdateComplaint(obj, "SP_APIComplaint");
+
+            if (Result > 0)
+            {
+                TempData["Success"] = "Complaint Updated Successfully";
+                return RedirectToAction("ComplaintList");
+            }
+
+            TempData["Error"] = "Update Failed";
+
+            return View(obj);
+        }
     }
 }

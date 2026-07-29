@@ -1,0 +1,249 @@
+﻿@model BObject.ComplaintMaster_CM
+
+@{
+    ViewBag.Title = "Complaint Action";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ComplaintAction", "Transaction", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.CMPL_Id)
+    <div class="card">
+
+        <div class="header bg-blue">
+
+            <h2>
+                Complaint Action
+            </h2>
+
+        </div>
+
+
+        <div class="body">
+
+
+            <div class="row">
+
+
+                <div class="col-md-4">
+
+                    <label>
+                        Complaint No
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.CMPL_ComplaintNo"
+                           readonly />
+
+                </div>
+
+
+
+                <div class="col-md-4">
+
+                    <label>
+                        Party Code
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.CMPL_PartyCode"
+                           readonly />
+
+                </div>
+
+
+
+                <div class="col-md-4">
+
+                    <label>
+                        Complaint Date
+                    </label>
+
+                    <input class="form-control"
+                           value="@(Model.CMPL_ComplaintDate.HasValue
+? Model.CMPL_ComplaintDate.Value.ToString("dd-MMM-yyyy")
+: "")"
+                           readonly />
+
+                </div>
+
+
+            </div>
+
+
+            <br />
+
+
+            <div class="row">
+
+
+                <div class="col-md-4">
+
+                    <label>
+                        Complaint Type
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.ComplaintType"
+                           readonly />
+
+                </div>
+
+
+
+                <div class="col-md-4">
+
+                    <label>
+                        Priority
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.CMPL_Priority"
+                           readonly />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label>
+                        Description
+                    </label>
+
+<textarea class="form-control"
+          rows="2"
+          readonly>@Model.CMPL_Description</textarea>
+
+                </div>
+            </div>
+
+
+
+            <br />
+
+            <hr />
+            <hr />
+
+            <h4><b>CMS Action</b></h4>
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label>Change Status</label>
+
+                    @Html.DropDownListFor(m => m.CMPL_Status,
+
+             new List<SelectListItem>
+             {
+                            new SelectListItem{Text="Pending",Value="Pending"},
+                            new SelectListItem{Text="Assigned",Value="Assigned"},
+                            new SelectListItem{Text="In Progress",Value="In Progress"},
+                            new SelectListItem{Text="Resolved",Value="Resolved"},
+                            new SelectListItem{Text="Rejected",Value="Rejected"}
+             },
+
+             new { @class = "form-control" })
+
+                </div>
+
+                <div class="col-md-4">
+                    <label>Resolved Date</label>
+
+                    @Html.TextBoxFor(m => m.CMPL_ResolvedDate,
+"{0:yyyy-MM-dd}",
+new
+{
+    @class = "form-control",
+    @type = "date",
+    @Value = Model.CMPL_ResolvedDate.HasValue
+             ? Model.CMPL_ResolvedDate.Value.ToString("yyyy-MM-dd")
+             : DateTime.Today.ToString("yyyy-MM-dd")
+})
+                </div>
+
+                <div class="col-md-4">
+
+                    <label>Assign To</label>
+
+                    @Html.TextBoxFor(m => m.CMPL_AssignTo,
+             new
+             {
+                 @class = "form-control",
+                 @placeholder = "Technician / Plumber"
+             })
+
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <label>Remarks</label>
+
+                    @Html.TextAreaFor(m => m.CMPL_Remarks,
+             new
+             {
+                 @class = "form-control",
+                 rows = 4
+             })
+
+                </div>
+
+            </div>
+
+            <br />
+
+
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                Update
+
+            </button>
+
+
+            <a href="@Url.Action("ComplaintList")"
+               class="btn btn-danger">
+
+                Back
+
+            </a>
+
+
+        </div>
+
+    </div>
+    <script>
+
+        $(document).ready(function () {
+
+            ToggleResolvedDate();
+
+            $("#CMPL_Status").change(function () {
+                ToggleResolvedDate();
+            });
+
+            function ToggleResolvedDate() {
+
+                if ($("#CMPL_Status").val() == "Resolved") {
+
+                    $("#CMPL_ResolvedDate").closest(".col-md-4").show();
+
+                }
+                else {
+
+                    $("#CMPL_ResolvedDate").val("");
+                    $("#CMPL_ResolvedDate").closest(".col-md-4").hide();
+
+                }
+            }
+
+        });
+
+    </script>
+}
