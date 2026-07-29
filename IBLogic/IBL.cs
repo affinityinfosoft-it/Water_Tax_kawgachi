@@ -16,6 +16,7 @@ namespace IBLogic
         Int64 InsertAnyMasters(List<SqlParameter> arrParams, string SP_Name, SqlParameter OutPutId);
         List<T> GetAnyList<T>(List<SqlParameter> arrParams, string SP_Name) where T : class, new();
         T GetAnySelectOne<T>(List<SqlParameter> arrParams, string SP_Name) where T : class, new();
+       
         //T GetGlobalMaster<T>(GlobalDataList global) where T : class, new();
         //List<T> GetGlobalMasterList<T>(GlobalDataList global) where T : class, new();
         //void SaveSmsTracker(List<SMSBO> smsBOs);

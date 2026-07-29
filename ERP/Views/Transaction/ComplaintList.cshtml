@@ -1,0 +1,398 @@
+﻿@model BObject.ComplaintMaster_CM
+
+@{
+    ViewBag.Title = "Complaint Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 style="background-color: aliceblue; text-align:center;">
+    @ViewBag.Title
+</h2>
+
+
+<hr />
+
+@if (Model != null &&
+    Model.ComplaintList != null &&
+    Model.ComplaintList.Count > 0)
+{
+
+
+    <div class="row">
+
+        <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
+
+
+            <table id="table"
+                   data-toggle="table"
+                   data-pagination="true"
+                   data-search="true"
+                   data-show-pagination-switch="true"
+                   data-show-refresh="true"
+                   data-key-events="true"
+                   data-show-toggle="true"
+                   data-resizable="true"
+                   data-cookie="true"
+                   data-cookie-id-table="saveId"
+                   data-show-export="true"
+                   data-click-to-select="true"
+                   data-toolbar="#toolbar">
+
+
+                <thead>
+
+
+                    <tr>
+
+                        <th data-checkbox="true"></th>
+
+                        <th>
+                            Sl.
+                        </th>
+
+                        <th>
+                            Complaint No
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Party Code
+                        </th>
+
+                        <th>
+                            Party Name
+                        </th>
+
+                        <th>
+                            Mobile
+                        </th>
+
+                        @*<th>
+                            Area
+                        </th>*@
+
+                        <th>
+                            Complaint Type
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                        <th>
+                            Priority
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    @{
+                        int i = 1;
+                    }
+
+
+
+                    @if (Model.ComplaintList != null &&
+                         Model.ComplaintList.Count > 0)
+                    {
+
+
+                        foreach (var item in Model.ComplaintList)
+                        {
+
+
+                            <tr>
+
+
+                                <td></td>
+
+
+                                <td>
+                                    @i
+                                </td>
+
+
+                                <td>
+                                    @item.CMPL_ComplaintNo
+                                </td>
+
+
+
+                                <td>
+
+                                    @(item.CMPL_ComplaintDate.HasValue
+                                    ?
+                                    item.CMPL_ComplaintDate.Value
+                                    .ToString("dd-MMM-yyyy")
+                                    :
+                                    "")
+
+                                </td>
+
+
+
+                                <td>
+                                    @item.CMPL_PartyCode
+                                </td>
+
+
+
+                                <td>
+                                    @item.PM_PartyName
+                                </td>
+
+
+
+                                <td>
+                                    @item.PM_MobNo
+                                </td>
+
+
+
+                                @*<td>
+                                    @item.AM_AreaName
+                                </td>*@
+
+
+
+                                <td>
+                                    @item.ComplaintType
+                                </td>
+
+
+
+                                <td>
+                                    @item.CMPL_Description
+                                </td>
+
+
+
+                                <td>
+
+
+                                    @if (item.CMPL_Priority == "High")
+                                    {
+
+                                        <span class="label label-danger">
+                                            High
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Priority == "Medium")
+                                    {
+
+                                        <span class="label label-warning">
+                                            Medium
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Priority == "Low")
+                                    {
+
+                                        <span class="label label-warning">
+                                            Low
+                                        </span>
+
+                                    }
+                                    else
+                                    {
+
+                                        <span class="label label-info">
+                                            @item.CMPL_Priority
+                                        </span>
+
+                                    }
+
+
+                                </td>
+
+
+
+
+                                <td>
+
+
+                                    @if (item.CMPL_Status == "Pending")
+                                    {
+
+                                        <span class="label label-danger">
+                                            Pending
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Status == "Assigned")
+                                    {
+
+                                        <span class="label label-warning">
+                                            Assigned
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Status == "In Progress")
+                                    {
+
+                                        <span class="label label-info">
+                                            In Progress
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Status == "Resolved")
+                                    {
+
+                                        <span class="label label-success">
+                                            Resolved
+                                        </span>
+
+                                    }
+                                    else if (item.CMPL_Status == "Rejected")
+                                    {
+
+                                        <span class="label label-default">
+                                            Rejected
+                                        </span>
+
+                                    }
+                                    else
+                                    {
+
+                                        <span class="label label-default">
+                                            @item.CMPL_Status
+                                        </span>
+
+                                    }
+
+
+                                </td>
+
+
+
+
+                                <td>
+
+
+                                    @if (Model != null &&
+Model.ComplaintList != null &&
+Model.ComplaintList.Count > 0)
+                                    {
+
+
+                                        <a href="@Url.Action("ComplaintEdit",
+                                             "Transaction",
+                                             new { id=item.CMPL_Id })"
+                                           style="text-decoration:none;">
+
+
+                                            <img src="~/Logo/Edit.png"
+                                                 width="30"
+                                                 height="30"
+                                                 title="View / Action" />
+
+                                        </a>
+
+
+                                    }
+                                    else
+                                    {
+
+
+                                        <a href="javascript:void(0)"
+                                           style="text-decoration:none;">
+
+
+                                            <img src="~/Logo/Edit.png"
+                                                 width="30"
+                                                 height="30"
+                                                 title="Not Authorized" />
+
+                                        </a>
+
+
+                                    }
+
+
+
+                                </td>
+
+
+
+                            </tr>
+
+
+                            i++;
+
+                        }
+
+
+                    }
+                    else
+                    {
+
+
+                        <tr>
+
+                            <td colspan="13"
+                                class="text-center text-danger">
+
+                                No Complaint Found
+
+                            </td>
+
+                        </tr>
+
+
+                    }
+
+
+
+                </tbody>
+
+
+            </table>
+
+
+
+        </div>
+
+
+    </div>
+
+
+}
+else
+{
+
+    <div class="alert-danger">
+
+        <h3>
+            You Are Not Authorize....................!
+        </h3>
+
+    </div>
+
+}
+
+
+
+@Scripts.Render("~/bundles/jquery")
+
+<script src="~/Scripts/data-table/bootstrap-table.js"></script>
