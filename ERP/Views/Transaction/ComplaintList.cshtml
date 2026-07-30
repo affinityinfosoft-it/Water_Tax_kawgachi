@@ -4,395 +4,326 @@
     ViewBag.Title = "Complaint Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .history-header {
+        background: #2f4050;
+        color: #fff;
+        border-bottom: 0;
+    }
 
+        .history-header h4 {
+            margin: 0;
+            font-weight: 600;
+        }
 
+    .modal-content {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .modal-body {
+        background: #fafafa;
+    }
+
+    .badge-status {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .pending {
+        background: #dc3545;
+    }
+
+    .assigned {
+        background: #fd7e14;
+    }
+
+    .progress {
+        background: #0d6efd;
+        height: 2rem;
+    }
+
+    .resolved {
+        background: #198754;
+    }
+
+    .rejected {
+        background: #6c757d;
+    }
+
+    .priority-high {
+        background: #dc3545;
+    }
+
+    .priority-medium {
+        background: #ffc107;
+        color: #000;
+    }
+
+    .priority-low {
+        background: #198754;
+    }
+</style>
 <h2 style="background-color: aliceblue; text-align:center;">
     @ViewBag.Title
 </h2>
-
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <hr />
 
 @if (Model != null &&
     Model.ComplaintList != null &&
     Model.ComplaintList.Count > 0)
 {
-
-
     <div class="row">
-
         <div class="col-sm-12 col-xl-12 col-md-12 table-responsive">
-
-
-            <table id="table"
-                   data-toggle="table"
-                   data-pagination="true"
-                   data-search="true"
-                   data-show-pagination-switch="true"
-                   data-show-refresh="true"
-                   data-key-events="true"
-                   data-show-toggle="true"
-                   data-resizable="true"
-                   data-cookie="true"
-                   data-cookie-id-table="saveId"
-                   data-show-export="true"
-                   data-click-to-select="true"
-                   data-toolbar="#toolbar">
-
+            <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true"
+                   data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
 
                 <thead>
-
 
                     <tr>
 
                         <th data-checkbox="true"></th>
 
-                        <th>
-                            Sl.
-                        </th>
+                        <th>Sl.</th>
 
-                        <th>
-                            Complaint No
-                        </th>
+                        <th>Complaint No</th>
 
-                        <th>
-                            Date
-                        </th>
+                        <th>Date</th>
 
-                        <th>
-                            Party Code
-                        </th>
+                        <th>Party</th>
 
-                        <th>
-                            Party Name
-                        </th>
+                        <th>Mobile</th>
 
-                        <th>
-                            Mobile
-                        </th>
+                        <th>Complaint Type</th>
 
-                        @*<th>
-                            Area
-                        </th>*@
+                        <th>Priority</th>
 
-                        <th>
-                            Complaint Type
-                        </th>
+                        <th>Status</th>
 
-                        <th>
-                            Description
-                        </th>
+                        <th>Assign To</th>
 
-                        <th>
-                            Priority
-                        </th>
+                        <th>Last Updated</th>
 
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Action
-                        </th>
-
+                        <th>Action</th>
 
                     </tr>
 
-
                 </thead>
 
-
-
                 <tbody>
-
 
                     @{
                         int i = 1;
                     }
 
-
-
-                    @if (Model.ComplaintList != null &&
-                         Model.ComplaintList.Count > 0)
+                    @foreach (var item in Model.ComplaintList)
                     {
-
-
-                        foreach (var item in Model.ComplaintList)
-                        {
-
-
-                            <tr>
-
-
-                                <td></td>
-
-
-                                <td>
-                                    @i
-                                </td>
-
-
-                                <td>
-                                    @item.CMPL_ComplaintNo
-                                </td>
-
-
-
-                                <td>
-
-                                    @(item.CMPL_ComplaintDate.HasValue
-                                    ?
-                                    item.CMPL_ComplaintDate.Value
-                                    .ToString("dd-MMM-yyyy")
-                                    :
-                                    "")
-
-                                </td>
-
-
-
-                                <td>
-                                    @item.CMPL_PartyCode
-                                </td>
-
-
-
-                                <td>
-                                    @item.PM_PartyName
-                                </td>
-
-
-
-                                <td>
-                                    @item.PM_MobNo
-                                </td>
-
-
-
-                                @*<td>
-                                    @item.AM_AreaName
-                                </td>*@
-
-
-
-                                <td>
-                                    @item.ComplaintType
-                                </td>
-
-
-
-                                <td>
-                                    @item.CMPL_Description
-                                </td>
-
-
-
-                                <td>
-
-
-                                    @if (item.CMPL_Priority == "High")
-                                    {
-
-                                        <span class="label label-danger">
-                                            High
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Priority == "Medium")
-                                    {
-
-                                        <span class="label label-warning">
-                                            Medium
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Priority == "Low")
-                                    {
-
-                                        <span class="label label-warning">
-                                            Low
-                                        </span>
-
-                                    }
-                                    else
-                                    {
-
-                                        <span class="label label-info">
-                                            @item.CMPL_Priority
-                                        </span>
-
-                                    }
-
-
-                                </td>
-
-
-
-
-                                <td>
-
-
-                                    @if (item.CMPL_Status == "Pending")
-                                    {
-
-                                        <span class="label label-danger">
-                                            Pending
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Status == "Assigned")
-                                    {
-
-                                        <span class="label label-warning">
-                                            Assigned
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Status == "In Progress")
-                                    {
-
-                                        <span class="label label-info">
-                                            In Progress
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Status == "Resolved")
-                                    {
-
-                                        <span class="label label-success">
-                                            Resolved
-                                        </span>
-
-                                    }
-                                    else if (item.CMPL_Status == "Rejected")
-                                    {
-
-                                        <span class="label label-default">
-                                            Rejected
-                                        </span>
-
-                                    }
-                                    else
-                                    {
-
-                                        <span class="label label-default">
-                                            @item.CMPL_Status
-                                        </span>
-
-                                    }
-
-
-                                </td>
-
-
-
-
-                                <td>
-
-
-                                    @if (Model != null &&
-Model.ComplaintList != null &&
-Model.ComplaintList.Count > 0)
-                                    {
-
-
-                                        <a href="@Url.Action("ComplaintEdit",
-                                             "Transaction",
-                                             new { id=item.CMPL_Id })"
-                                           style="text-decoration:none;">
-
-
-                                            <img src="~/Logo/Edit.png"
-                                                 width="30"
-                                                 height="30"
-                                                 title="View / Action" />
-
-                                        </a>
-
-
-                                    }
-                                    else
-                                    {
-
-
-                                        <a href="javascript:void(0)"
-                                           style="text-decoration:none;">
-
-
-                                            <img src="~/Logo/Edit.png"
-                                                 width="30"
-                                                 height="30"
-                                                 title="Not Authorized" />
-
-                                        </a>
-
-
-                                    }
-
-
-
-                                </td>
-
-
-
-                            </tr>
-
-
-                            i++;
-
-                        }
-
-
-                    }
-                    else
-                    {
-
-
                         <tr>
 
-                            <td colspan="13"
-                                class="text-center text-danger">
+                            <td></td>
 
-                                No Complaint Found
+                            <td>@i</td>
+
+                            <td>
+                                <b>@item.CMPL_ComplaintNo</b>
+                            </td>
+
+                            <td>
+                                @(item.CMPL_ComplaintDate.HasValue
+            ? item.CMPL_ComplaintDate.Value.ToString("dd-MMM-yyyy")
+            : "")
+                            </td>
+
+                            <td>
+                                <b>@item.CMPL_PartyCode</b><br />
+                                @item.PM_PartyName
+                            </td>
+
+                            <td>@item.PM_MobNo</td>
+
+                            <td>@item.ComplaintType</td>
+
+                            <td>
+
+                                @if (item.CMPL_Priority == "High")
+                                {
+                                    <span class="badge-status priority-high">High</span>
+                                }
+                                else if (item.CMPL_Priority == "Medium")
+                                {
+                                    <span class="badge-status priority-medium">Medium</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status priority-low">Low</span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                @if (item.CMPL_Status == "Pending")
+                                {
+                                    <span class="badge-status pending">Pending</span>
+                                }
+                                else if (item.CMPL_Status == "Assigned")
+                                {
+                                    <span class="badge-status assigned">Assigned</span>
+                                }
+                                else if (item.CMPL_Status == "In Progress")
+                                {
+                                    <span class="badge-status progress">In Progress</span>
+                                }
+                                else if (item.CMPL_Status == "Resolved")
+                                {
+                                    <span class="badge-status resolved">Resolved</span>
+                                }
+                                else if (item.CMPL_Status == "Rejected")
+                                {
+                                    <span class="badge-status rejected">Rejected</span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                @if (String.IsNullOrWhiteSpace(item.CMPL_AssignTo))
+                                {
+                                    <span class="text-danger">Not Assigned</span>
+                                }
+                                else
+                                {
+                                    @item.CMPL_AssignTo
+                                }
+
+                            </td>
+                            <td>
+
+                                @if (item.CMPL_Status == "Resolved")
+                                {
+                                    @(item.CMPL_ResolvedDate.HasValue
+        ? item.CMPL_ResolvedDate.Value.ToString("dd-MMM-yyyy")
+        : "")
+                                }
+                                else
+                                {
+                                    @item.CreatedDate.ToString("dd-MMM-yyyy HH:mm")
+                                }
+
+                            </td>
+
+
+                            <td>
+
+                                @if (item.CMPL_Status == "Resolved" || item.CMPL_Status == "Rejected")
+                                {
+                                    <button class="btn btn-info btn-xs"
+                                            onclick="ViewHistory(@item.CMPL_Id)"
+                                            title="View History">
+
+                                        <i class="fa fa-history"></i> History
+
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("ComplaintEdit","Transaction",new { id = item.CMPL_Id })"
+                                       class="btn btn-warning btn-xs"
+                                       title="Take Action">
+
+                                        <i class="fa fa-edit"></i> Action
+
+                                    </a>
+                                }
 
                             </td>
 
                         </tr>
 
-
+                        i++;
                     }
 
-
-
                 </tbody>
-
-
             </table>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="HistoryModal"
+         tabindex="-1"
+         role="dialog">
 
+        <div class="modal-dialog modal-lg">
 
+            <div class="modal-content">
+
+                <div class="modal-header history-header">
+
+                    <h4 class="modal-title">
+                        <i class="fa fa-history"></i>
+                        Complaint History
+                    </h4>
+
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal">
+                        &times;
+                    </button>
+
+                </div>
+
+                <div class="modal-body" id="HistoryBody">
+
+                    <div class="text-center">
+
+                        <img src="~/Content/images/loading.gif" />
+                        <br />
+                        Loading...
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
-
     </div>
-
-
 }
 else
 {
-
     <div class="alert-danger">
-
         <h3>
-            You Are Not Authorize....................!
+            You Are Not Authorize to take complain....................!
         </h3>
-
     </div>
 
 }
 
-
-
 @Scripts.Render("~/bundles/jquery")
+@*@Scripts.Render("~/bundles/bootstrap")*@
 
 <script src="~/Scripts/data-table/bootstrap-table.js"></script>
+<script>
+    function ViewHistory(id) {
+
+    $("#HistoryBody").html(
+        "<div class='text-center'><h4>Loading...</h4></div>"
+    );
+
+    $("#HistoryModal").modal("show");
+
+    $("#HistoryBody").load(
+        '@Url.Action("ComplaintDetailsById","Transaction")',
+        { id: id }
+    );
+
+    }
+    $(document).on("click", ".close", function () {
+        $("#HistoryModal").modal("hide");
+    });
+</script>

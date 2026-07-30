@@ -579,5 +579,22 @@ namespace ERP.Controllers
 
             return View(obj);
         }
+
+
+     
+        public ActionResult ComplaintDetailsById(long id)
+        {
+            ComplaintMaster_CM complaint = new ComplaintMaster_CM();
+
+            complaint.CMPL_Id = id;
+            complaint.CM_ID = UserModel.CM_ID;
+            complaint.FyId = UserModel.FyId;
+
+            complaint.HistoryList =
+                service.GetComplaintHistory(complaint, "SP_APIComplaint");
+
+            return PartialView("_ComplaintHistory", complaint);
+        }
+
     }
 }

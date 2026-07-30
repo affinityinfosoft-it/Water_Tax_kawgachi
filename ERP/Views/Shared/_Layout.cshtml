@@ -6,7 +6,24 @@
     layout = service.GetGlobalSelectOne<Layout>("Layout", "IsActive", 1);
     ViewBag.Head = layout.Head;
 }*@
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden;
+    }
 
+    .container,
+    .container-fluid {
+        max-width: 100% !important;
+    }
+
+    .section-header {
+        width: 100%;
+    }
+</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,8 +55,10 @@
             <div class="strip-3"></div>
         </div>
     </div>
+    @*<header class="section-header">
+        <div class="container">*@
     <header class="section-header">
-        <div class="container">
+        <div class="container-fluid px-3">
             <div class="row">
                 <div class="col-md-12 col-xl-12 col-sm-12 row-cols-sm-auto">
                     <span><b style="font-size: 27px; color: #0d6efd">Water Tax Collection</b></span>
@@ -51,10 +70,12 @@
                                 {
                                     if (item.CM_ID == ViewBag.CMID)
                                     {
-                    <option value="@item.CM_ID" selected>@item.name</option> }
+                                        <option value="@item.CM_ID" selected>@item.name</option>
+ }
                                     else
                                     {
-                    <option value="@item.CM_ID">@item.name</option>}
+                                        <option value="@item.CM_ID">@item.name</option>
+}
                                 }
                             </select>
                         </span>
@@ -126,8 +147,7 @@
                 }
             });
         }
-        function Calltoastrsuccessredirectanotherpage( messages,  redirectpage)
-        {
+        function Calltoastrsuccessredirectanotherpage(messages, redirectpage) {
             toastr.success("<br /><button type='button' id='confirmationButtonYes' class='btn btn-info' style='margin-left: 197px;'>Ok</button>", messages,
                 {
                     closeButton: false,
