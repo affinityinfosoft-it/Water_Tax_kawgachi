@@ -1,0 +1,44 @@
+﻿
+
+@model BObject.ComplaintMaster_CM
+
+<h3>Complaint History</h3>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+
+        <tr>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th>Assign To</th>
+            <th>Remarks</th>
+            <th>Action By</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model.HistoryList)
+        {
+            <tr>
+
+                <td>@item.CH_UpdatedDate.ToString("dd-MMM-yyyy hh:mm tt")</td>
+
+                <td>@item.CH_Status</td>
+
+                <td>@item.CH_AssignTo</td>
+
+                <td>@item.CH_Remarks</td>
+
+                <td>@item.CH_UpdatedBy</td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<a href="@Url.Action("ComplaintList")" class="btn btn-danger">Back</a>

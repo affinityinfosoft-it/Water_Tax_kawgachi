@@ -169,6 +169,45 @@ namespace ERP.Areas.API.Controller
 
                 return Ok(dal.ComplaintDetails(request.ComplaintId));
             }
+
+        //-------------------------------------------------------
+        // Complaint History
+        //-------------------------------------------------------
+        [HttpPost]
+        [Route("complaint-history")]
+        public IHttpActionResult ComplaintHistory(ComplaintRequest request)
+        {
+            ApiResponse response = new ApiResponse();
+
+            var auth = Request.Headers.Authorization;
+
+            if (auth == null)
+            {
+                response.Success = false;
+                response.Message = "Authorization Token Missing.";
+                return Ok(response);
+            }
+
+            if (auth.Scheme != "Bearer")
+            {
+                response.Success = false;
+                response.Message = "Invalid Authorization Type.";
+                return Ok(response);
+            }
+
+            TokenManager tokenManager = new TokenManager();
+
+            ApiResponse token = tokenManager.ValidateToken(auth.Parameter);
+
+            if (!token.Success)
+                return Ok(token);
+
+            request.PartyCode = token.Data.ToString();
+
+            return Ok(dal.ComplaintHistory(request.ComplaintId));
         }
+
+
+    }
     }
 

@@ -42,5 +42,6 @@ namespace BObject
         //public DateTime? CreatedDate { get; set; }
 
         public List<ComplaintMaster_CM> ComplaintList { get; set; }
+        public List<ComplaintHistory_CH> HistoryList { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ERP.Areas.API.Model.Request;
+﻿using BObject;
+using ERP.Areas.API.Model.Request;
 using ERP.Areas.API.Model.Response;
 using System;
 using System.Collections.Generic;
@@ -163,5 +164,45 @@ namespace ERP.Areas.API.DAL
 
             return response;
         }
+
+        public List<ComplaintHistory_CH> ComplaintHistory(long complaintId)
+        {
+            List<ComplaintHistory_CH> list = new List<ComplaintHistory_CH>();
+
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand("SP_APIComplaint", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@TransType", "ComplaintHistory");
+                cmd.Parameters.AddWithValue("@ComplaintId", complaintId);
+
+                con.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    ComplaintHistory_CH obj = new ComplaintHistory_CH();
+
+                    obj.CH_Id = Convert.ToInt64(dr["CH_Id"]);
+                    obj.CH_ComplaintId = Convert.ToInt64(dr["CH_ComplaintId"]);
+                    obj.CH_Status = dr["CH_Status"].ToString();
+                    obj.CH_AssignTo = dr["CH_AssignTo"].ToString();
+                    obj.CH_Remarks = dr["CH_Remarks"].ToString();
+                    obj.CH_UpdatedBy = dr["CH_UpdatedBy"].ToString();
+
+                    obj.CH_UpdatedDate = Convert.ToDateTime(dr["CH_UpdatedDate"]);
+
+                    if (dr["CMPL_ResolvedDate"] != DBNull.Value)
+                        obj.CMPL_ResolvedDate = Convert.ToDateTime(dr["CMPL_ResolvedDate"]);
+
+                    list.Add(obj);
+                }
+            }
+
+            return list;
+        }
+
     }
 }

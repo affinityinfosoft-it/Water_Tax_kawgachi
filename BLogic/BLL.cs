@@ -1467,8 +1467,7 @@ namespace BLogic
             throw new NotImplementedException();
         }
         #endregion
-        public List<T> GetComplaintList<T>
-        (ComplaintMaster_CM TEntity,string SP_Name) where T : class, new()
+        public List<T> GetComplaintList<T> (ComplaintMaster_CM TEntity,string SP_Name) where T : class, new()
         {
             List<SqlParameter> arrParams =new List<SqlParameter>();
             arrParams.Add(new SqlParameter("@TransType", "Select"));
@@ -1514,6 +1513,20 @@ namespace BLogic
             arrParams.Add(OutPutId);
 
             return common.InsertAnyMasters(arrParams, SP_Name, OutPutId);
+        }
+
+        public List<ComplaintHistory_CH> GetComplaintHistory(ComplaintMaster_CM entity, string SP_Name)
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "ComplaintHistory"));
+            arrParams.Add(new SqlParameter("@ComplaintId", entity.CMPL_Id));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnyList<ComplaintHistory_CH>(arrParams, SP_Name);
         }
     }
 }
