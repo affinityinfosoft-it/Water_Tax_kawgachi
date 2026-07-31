@@ -56,6 +56,52 @@ namespace BLogic
         }
         #endregion
         #endregion
+        #region Dashboard
+
+        //public DashboardModel GetDashboardCard()
+        //{
+        //    List<SqlParameter> arrParams = new List<SqlParameter>();
+
+        //    arrParams.Add(new SqlParameter("@TransType", "CARD"));
+
+        //    return common.GetAnySelectOne<DashboardModel>(arrParams, "SP_Dashboard");
+        //}
+        public DashboardModel GetDashboardCard(DateTime? FromDate = null, DateTime? ToDate = null)
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "CARD"));
+
+            arrParams.Add(new SqlParameter("@FromDate",
+                FromDate ?? (object)DBNull.Value));
+
+            arrParams.Add(new SqlParameter("@ToDate",
+                ToDate ?? (object)DBNull.Value));
+
+
+            return common.GetAnySelectOne<DashboardModel>(
+                arrParams,
+                "SP_Dashboard"
+            );
+        }
+        public List<DashboardChart> GetMonthlyChart()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "MONTH"));
+
+            return common.GetAnyList<DashboardChart>(arrParams, "SP_Dashboard");
+        }
+
+        public List<DashboardChart> GetYearlyChart()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "YEAR"));
+
+            return common.GetAnyList<DashboardChart>(arrParams, "SP_Dashboard");
+        }
+        #endregion
         #region Layout
         #region Menu Bind
         public List<T> GetMenuList<T>(MenuMasterModel TEntity, string SP_Name) where T : class, new()
@@ -1467,27 +1513,28 @@ namespace BLogic
             throw new NotImplementedException();
         }
         #endregion
-        public List<T> GetComplaintList<T> (ComplaintMaster_CM TEntity,string SP_Name) where T : class, new()
+        #region COMPLAIN MANAGEMENT
+        public List<T> GetComplaintList<T>(ComplaintMaster_CM TEntity, string SP_Name) where T : class, new()
         {
-            List<SqlParameter> arrParams =new List<SqlParameter>();
+            List<SqlParameter> arrParams = new List<SqlParameter>();
             arrParams.Add(new SqlParameter("@TransType", "Select"));
             arrParams.Add(new SqlParameter("@CM_ID", TEntity.CM_ID));
             arrParams.Add(new SqlParameter("@FyId", TEntity.FyId));
-            SqlParameter OutPutId =new SqlParameter("@OutPutId", SqlDbType.Int);
-            OutPutId.Direction =ParameterDirection.Output;
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
             arrParams.Add(OutPutId);
-            return common.GetAnyList<T>(arrParams,SP_Name);
+            return common.GetAnyList<T>(arrParams, SP_Name);
         }
-        public T GetComplaintDetails<T>(ComplaintMaster_CM entity,string SP_Name) where T : class, new()
+        public T GetComplaintDetails<T>(ComplaintMaster_CM entity, string SP_Name) where T : class, new()
         {
-            List<SqlParameter> arrParams =new List<SqlParameter>();
+            List<SqlParameter> arrParams = new List<SqlParameter>();
             arrParams.Add(new SqlParameter("@TransType", "ComplaintDetailsCMS"));
-            arrParams.Add(new SqlParameter("@ComplaintId",entity.CMPL_Id));
-            arrParams.Add(new SqlParameter("@CM_ID",entity.CM_ID));
-            SqlParameter OutPutId =new SqlParameter("@OutPutId", SqlDbType.Int);
-            OutPutId.Direction =ParameterDirection.Output;
+            arrParams.Add(new SqlParameter("@ComplaintId", entity.CMPL_Id));
+            arrParams.Add(new SqlParameter("@CM_ID", entity.CM_ID));
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
             arrParams.Add(OutPutId);
-            return common.GetAnySelectOne<T>(arrParams,SP_Name);
+            return common.GetAnySelectOne<T>(arrParams, SP_Name);
         }
         public Int64 UpdateComplaint(ComplaintMaster_CM TEntity, string SP_Name)
         {
@@ -1528,6 +1575,8 @@ namespace BLogic
 
             return common.GetAnyList<ComplaintHistory_CH>(arrParams, SP_Name);
         }
+        #endregion
+
     }
 }
 

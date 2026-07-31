@@ -529,6 +529,8 @@ namespace ERP.Controllers
             return View(VanBooking_VB);
         }
         #endregion
+
+        #region COMPLAIN MANAGEMENT
         public ActionResult ComplaintList()
         {
             //if (UserModel == null)
@@ -538,7 +540,7 @@ namespace ERP.Controllers
             complaint.FyId = UserModel.FyId;
             complaint.CM_ID = UserModel.CM_ID;
             complaint.ComplaintList =
-            service.GetComplaintList<ComplaintMaster_CM>(complaint,"SP_APIComplaint");
+            service.GetComplaintList<ComplaintMaster_CM>(complaint, "SP_APIComplaint");
             return View(complaint);
         }
         public ActionResult ComplaintEdit(long id)
@@ -553,7 +555,7 @@ namespace ERP.Controllers
             complaint.CM_ID = UserModel.CM_ID;
             complaint.FyId = UserModel.FyId;
             complaint =
-                service.GetComplaintDetails<ComplaintMaster_CM>(complaint,"SP_APIComplaint");
+                service.GetComplaintDetails<ComplaintMaster_CM>(complaint, "SP_APIComplaint");
             return View(complaint);
 
         }
@@ -581,7 +583,7 @@ namespace ERP.Controllers
         }
 
 
-     
+
         public ActionResult ComplaintDetailsById(long id)
         {
             ComplaintMaster_CM complaint = new ComplaintMaster_CM();
@@ -595,6 +597,9 @@ namespace ERP.Controllers
 
             return PartialView("_ComplaintHistory", complaint);
         }
+        #endregion
+        #region NOTICE MASTER
+        #endregion
 
     }
 }
