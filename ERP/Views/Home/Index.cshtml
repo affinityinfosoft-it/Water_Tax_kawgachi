@@ -1,47 +1,624 @@
-﻿@{ ViewBag.Title = "Home Page"; }
+﻿@model BObject.DashboardModel
+@{ ViewBag.Title = "Home Page"; }
 
-<div class="row">
-    <img src="~/Logo/water.jpg" height="500" />
+
+<style>
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /*==========================
+            Dashboard
+    ===========================*/
+
+    .dashboard-bg {
+        background: #fafbfc;
+        border-radius: 15px;
+        padding: 5px;
+    }
+
+    .dashboard-title {
+        color: #1b4f72;
+        margin-bottom: 5px;
+    }
+
+        .dashboard-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+    /*==========================
+              Cards
+    ===========================*/
+
+    .dashboard-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        color: #fff;
+        position: relative;
+        cursor: pointer;
+        transition: .35s;
+        box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0,0,0,.20);
+        }
+
+        /* Shine */
+
+        .dashboard-card:before {
+            content: "";
+            position: absolute;
+            top: -80%;
+            left: -60%;
+            width: 45%;
+            height: 250%;
+            background: rgba(255,255,255,.18);
+            transform: rotate(25deg);
+            transition: .8s;
+        }
+
+        .dashboard-card:hover:before {
+            left: 130%;
+        }
+
+        /* Circle */
+
+        .dashboard-card:after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,.08);
+            border-radius: 50%;
+        }
+
+        /*==========================
+            Card Body
+    ===========================*/
+
+        .dashboard-card .card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            min-height: 95px;
+        }
+
+        .dashboard-card h6 {
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            font-weight: 600;
+            line-height: 15px;
+            color: rgba(255,255,255,.95);
+        }
+
+        .dashboard-card h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .dashboard-card small {
+            font-size: 10px;
+            opacity: .9;
+        }
+
+    /*==========================
+               Icon
+    ===========================*/
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.20);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        animation: floating 2.5s ease-in-out infinite;
+    }
+
+    @@keyframes floating {
+
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-6px);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    /*==========================
+          Card Colours
+    ===========================*/
+
+    .card-water {
+        background: linear-gradient(135deg,#0072ff,#00c6ff);
+    }
+
+    .card-beneficiary {
+        background: linear-gradient(135deg,#00b09b,#96c93d);
+    }
+
+    .card-reconnection {
+        background: linear-gradient(135deg,#ff9966,#ff5e62);
+    }
+
+    .card-form {
+        background: linear-gradient(135deg,#8E2DE2,#4A00E0);
+    }
+
+    .card-material {
+        background: linear-gradient(135deg,#11998e,#38ef7d);
+    }
+
+    .card-ferrule {
+        background: linear-gradient(135deg,#fc4a1a,#f7b733);
+    }
+
+    .card-caution {
+        background: linear-gradient(135deg,#283c86,#45a247);
+    }
+
+    /* Van Booking */
+
+    .card-van {
+        background: linear-gradient(135deg,#5B247A,#1BCEDF);
+    }
+
+    /* Tank Booking */
+
+    .card-tank {
+        background: linear-gradient(135deg,#F7971E,#FFD200);
+    }
+
+    /* Total */
+
+    .card-total {
+        background: linear-gradient(135deg,#232526,#414345);
+    }
+
+    /*==========================
+            Responsive
+    ===========================*/
+
+    .dashboard-col {
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding: 5px;
+    }
+
+    @@media (max-width:1400px) {
+
+        .dashboard-col {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+    }
+
+    @@media (max-width:992px) {
+
+        .dashboard-col {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+        }
+    }
+
+    @@media (max-width:768px) {
+
+        .dashboard-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .dashboard-card .card-body {
+            min-height: 90px;
+            padding: 10px;
+        }
+
+        .dashboard-card h6 {
+            font-size: 10px;
+        }
+
+        .dashboard-card h3 {
+            font-size: 16px;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+        }
+    }
+
+    @@media (max-width:576px) {
+
+        .dashboard-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .dashboard-title h2 {
+            font-size: 24px;
+        }
+    }
+
+    /*==========================
+            Charts
+    ===========================*/
+
+    .chart-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    }
+
+        .chart-card .card-header {
+            background: #fff;
+            border-bottom: none;
+            font-weight: 600;
+            padding: 12px 18px;
+        }
+
+        .chart-card .card-body {
+            height: 260px;
+        }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 380px;
+    }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+<div class="dashboard-bg">
+
+    <div class="dashboard-title d-flex justify-content-between align-items-center">
+
+        <h2 class="mb-0">
+            <i class="fas fa-chart-line text-primary"></i>
+            Water Tax Dashboard
+        </h2>
+
+        <div class="text-end">
+            <button id="daterange"
+                    class="btn btn-primary">
+                <i class="fa fa-calendar"></i>
+                <span>Today</span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!-- Water Tax -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-water">
+                <div class="card-body">
+                    <div>
+                        <h6>Water Tax Collection</h6>
+                        <h3>₹ @Model.WaterTaxCollection</h3>
+                        <small>Today's Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-faucet-drip"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beneficiary -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-beneficiary">
+                <div class="card-body">
+                    <div>
+                        <h6>Beneficiary Connection</h6>
+                        <h3>₹ @Model.BeneficiaryCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reconnection -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-reconnection">
+                <div class="card-body">
+                    <div>
+                        <h6>Repairing / Reconnection</h6>
+                        <h3>₹ @Model.ReconnectionCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-rotate"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Sales -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-form">
+                <div class="card-body">
+                    <div>
+                        <h6>Form Sales</h6>
+                        <h3>₹ @Model.FormSalesCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-material">
+                <div class="card-body">
+                    <div>
+                        <h6>Materials Charge</h6>
+                        <h3>₹ @Model.MaterialCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ferrule -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-ferrule">
+                <div class="card-body">
+                    <div>
+                        <h6>Ferrule Charge</h6>
+                        <h3>₹ @Model.FerruleCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-screwdriver-wrench"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caution Money -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-caution">
+                <div class="card-body">
+                    <div>
+                        <h6>Caution Money</h6>
+                        <h3>₹ @Model.CautionMoneyCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Van Booking Money -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-van">
+                <div class="card-body">
+                    <div>
+                        <h6>Van Booking</h6>
+                        <h3>₹ @Model.VanBookingCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-van-shuttle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tank Booking Money -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-tank">
+                <div class="card-body">
+                    <div>
+                        <h6>Tank Booking</h6>
+                        <h3>₹ @Model.TankBookingCollection</h3>
+                        <small>Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fa-solid fa-oil-can"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Total -->
+        <div class="dashboard-col">
+            <div class="dashboard-card card-total">
+                <div class="card-body">
+                    <div>
+                        <h6>Total Collection</h6>
+                        <h3>₹ @Model.TotalCollection</h3>
+                        <small>Overall Collection</small>
+                    </div>
+
+                    <div class="card-icon">
+                        <i class="fas fa-indian-rupee-sign"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Charts -->
+    <div class="row mt-3">
+
+        <!-- Monthly Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow border-0 rounded-4 h-100">
+
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-column text-primary"></i>
+                        Monthly Collection
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="MonthlyChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Yearly Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow border-0 rounded-4 h-100">
+
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar text-success"></i>
+                        Yearly Collection
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="YearlyChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" />
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@section scripts {
 
-@*<div class="row">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Primary card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Primary card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Primary card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Primary card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-    </div>*@
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script src="~/Scripts/AppScript/DashBoard.js"></script>
+}
+<script>
+    var month = @Html.Raw(ViewBag.MonthChart);
+
+    new Chart(document.getElementById("MonthlyChart"), {
+        type: 'bar',
+        data: {
+            labels: month.map(x => x.Label),
+            datasets: [{
+                label: 'Monthly Collection',
+                data: month.map(x => x.Amount),
+                backgroundColor: '#36A2EB',
+                borderRadius: 6,
+                barPercentage: 0.7,
+                categoryPercentage: 0.7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 
 
+    var year = @Html.Raw(ViewBag.YearChart);
 
+    new Chart(document.getElementById("YearlyChart"), {
+        type: 'bar',
+        data: {
+            labels: year.map(x => x.Label),
+            datasets: [{
+                label: 'Yearly Collection',
+                data: year.map(x => x.Amount),
+                backgroundColor: '#4CAF50',
+                borderRadius: 6,
+                barPercentage: 0.7,
+                categoryPercentage: 0.7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
