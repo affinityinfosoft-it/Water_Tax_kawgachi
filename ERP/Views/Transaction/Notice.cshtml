@@ -1,0 +1,328 @@
+﻿@model BObject.NoticeMaster_NM
+
+@{
+    ViewBag.Title = "Notice Entry";
+}
+
+@Html.HiddenFor(m => m.NM_Id)
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            Notice Entry
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <!-- ===================== -->
+        <!-- Notice Type -->
+        <!-- ===================== -->
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <label>Notice Type <span class="text-danger">*</span></label>
+
+                @Html.DropDownListFor(m => m.NM_NT_Id,
+                    (SelectList)ViewBag.NM_NT_Id,
+                    "-- Select Notice Type --",
+                    new { @class = "form-control" })
+
+            </div>
+
+            <div class="col-md-9">
+
+                <label>Notice For</label>
+
+                <br />
+
+                <label class="mr-3">
+                    <input type="radio" name="NoticeFor" value="Party" checked />
+                    Party Wise
+                </label>
+
+                <label class="mr-3">
+                    <input type="radio" name="NoticeFor" value="Area" />
+                    Area Wise
+                </label>
+
+                <label class="mr-3">
+                    <input type="radio" name="NoticeFor" value="Para" />
+                    Para Wise
+                </label>
+
+                <label class="mr-3">
+                    <input type="radio" name="NoticeFor" value="All" />
+                    All Consumers
+                </label>
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        <!-- ===================== -->
+        <!-- Party -->
+        <!-- ===================== -->
+
+        <div id="divParty">
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <label>Party Code</label>
+
+                    @Html.TextBoxFor(m => m.NM_PartyCode,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Enter Party Code & Press Enter"
+                    })
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Consumer Name</label>
+
+                    <input type="text"
+                           id="PartyName"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Father / Husband Name</label>
+
+                    <input type="text"
+                           id="FatherName"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Mobile No</label>
+
+                    <input type="text"
+                           id="Mobile"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <!-- ===================== -->
+        <!-- Area / Para -->
+        <!-- ===================== -->
+
+        <div class="row">
+
+            <div class="col-md-3" id="divArea">
+
+                <label>Area</label>
+
+                @Html.DropDownListFor(m => m.NM_AreaId,
+                    (SelectList)ViewBag.NM_AreaId,
+                    "-- Select Area --",
+                    new
+                    {
+                        @class = "form-control"
+                    })
+
+            </div>
+
+            <div class="col-md-3" id="divPara">
+
+                <label>Para</label>
+
+                @Html.DropDownListFor(m => m.NM_ParaId,
+                    Enumerable.Empty<SelectListItem>(),
+                    "-- Select Para --",
+                    new
+                    {
+                        @class = "form-control"
+                    })
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        <!-- ===================== -->
+        <!-- Title -->
+        <!-- ===================== -->
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label>Notice Title <span class="text-danger">*</span></label>
+
+                @Html.TextBoxFor(m => m.NM_Title,
+                new
+                {
+                    @class = "form-control",
+                    placeholder = "Enter Notice Title"
+                })
+
+            </div>
+            <div class="col-md-6">
+
+                <label>Upload Notice File (PDF / JPG / PNG)</label>
+
+                <input type="file"
+                       id="NoticeFile"
+                       class="form-control"
+                       accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+
+                @Html.HiddenFor(m => m.NM_UploadFile)
+
+                @if (!string.IsNullOrWhiteSpace(Model.NM_UploadFile))
+                {
+                    <br />
+                    <a href="@Url.Content(Model.NM_UploadFile)"
+                       target="_blank"
+                       class="btn btn-sm btn-success">
+                        View Uploaded File
+                    </a>}
+
+
+            </div>
+        </div>
+        
+         
+        <br />
+
+        <!-- ===================== -->
+        <!-- Notice -->
+        <!-- ===================== -->
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <label>Notice Details <span class="text-danger">*</span></label>
+
+                @Html.TextAreaFor(m => m.NM_Notice,
+                new
+                {
+                    @class = "form-control",
+                    rows = "3",
+                    placeholder = "Enter Notice..."
+                })
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <!-- ===================== -->
+        <!-- Dates -->
+        <!-- ===================== -->
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <label>From Date</label>
+
+                @Html.TextBoxFor(m => m.NM_FromDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date"
+                    })
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>To Date</label>
+
+                @Html.TextBoxFor(m => m.NM_ToDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date"
+                    })
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>&nbsp;</label>
+
+                <div class="form-check">
+
+                    @Html.CheckBoxFor(m => m.NM_IsPublish,
+                        new
+                        {
+                            @class = "form-check-input"
+                        })
+
+                    <label class="form-check-label">
+                        Publish Notice
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        <!-- ===================== -->
+        <!-- Buttons -->
+        <!-- ===================== -->
+
+        <div class="text-right">
+
+            <button type="button"
+                    class="btn btn-info"
+                    onclick="location.reload();">
+                Refresh
+            </button>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    id="btnSave">
+                @ViewBag.Button
+            </button>
+
+            <a href="/Transaction/NoticeList"
+               class="btn btn-danger">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/AppScript/Notice.js"></script>
+
+}

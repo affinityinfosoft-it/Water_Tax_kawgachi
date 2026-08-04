@@ -1576,7 +1576,129 @@ namespace BLogic
             return common.GetAnyList<ComplaintHistory_CH>(arrParams, SP_Name);
         }
         #endregion
+        #region NoticeMaster
+        public T GetConsumerDetailsssGet<T>(PartyLedger_PL TEntity, string SP_Name)
+         where T : class, new()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
 
+            arrParams.Add(new SqlParameter("@TransType", "SelectPartys"));
+            arrParams.Add(new SqlParameter("@NM_PartyCode", TEntity.PM_PartyCode));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnySelectOne<T>(arrParams, SP_Name);
+        }
+        public Int64 InsUpNotice(NoticeMaster_NM TEntity, string SP_Name)
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            if (TEntity.NM_Id != 0)
+            {
+                arrParams.Add(new SqlParameter("@TransType", "UPDATE"));
+                arrParams.Add(new SqlParameter("@NM_Id", TEntity.NM_Id));
+            }
+            else
+            {
+                arrParams.Add(new SqlParameter("@TransType", "INSERT"));
+            }
+
+          
+            arrParams.Add(new SqlParameter("@NM_NT_Id", TEntity.NM_NT_Id));
+            arrParams.Add(new SqlParameter("@NM_Title", TEntity.NM_Title));
+            arrParams.Add(new SqlParameter("@NM_Notice", TEntity.NM_Notice));
+            arrParams.Add(new SqlParameter("@NM_FromDate", TEntity.NM_FromDate));
+            arrParams.Add(new SqlParameter("@NM_ToDate", TEntity.NM_ToDate));
+            arrParams.Add(new SqlParameter("@NM_PartyCode", string.IsNullOrWhiteSpace(TEntity.NM_PartyCode) ? (object)DBNull.Value : TEntity.NM_PartyCode));
+            arrParams.Add(new SqlParameter("@NM_AreaId", TEntity.NM_AreaId == 0 ? (object)DBNull.Value : TEntity.NM_AreaId));
+            arrParams.Add(new SqlParameter("@NM_ParaId", TEntity.NM_ParaId == 0 ? (object)DBNull.Value : TEntity.NM_ParaId));
+            arrParams.Add(new SqlParameter("@NM_UploadFile", string.IsNullOrWhiteSpace(TEntity.NM_UploadFile) ? (object)DBNull.Value : TEntity.NM_UploadFile));
+            arrParams.Add(new SqlParameter("@NM_IsPublish", TEntity.NM_IsPublish));
+
+            if (TEntity.NM_Id == 0)
+                arrParams.Add(new SqlParameter("@NM_CreatedBy", TEntity.NM_CreatedBy));
+            else
+                arrParams.Add(new SqlParameter("@NM_EditedBy", TEntity.NM_EditedBy));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.BigInt);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.InsertAnyMasters(arrParams, SP_Name, OutPutId);
+        }
+        public List<T> GetNotice<T>(NoticeMaster_NM TEntity, string SP_Name)
+       where T : class, new()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "SELECTALL"));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.BigInt);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnyList<T>(arrParams, SP_Name);
+        }
+        public T GetNoticeById<T>(NoticeMaster_NM TEntity, string SP_Name)
+    where T : class, new()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "SELECTONE"));
+            arrParams.Add(new SqlParameter("@NM_Id", TEntity.NM_Id));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.BigInt);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnySelectOne<T>(arrParams, SP_Name);
+        }
+        public T GetConsumerForNotice<T>(PartyLedger_PL TEntity, string SP_Name)
+    where T : class, new()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@OppType", "SelectPartys"));
+            arrParams.Add(new SqlParameter("@PM_PartyCode", TEntity.PM_PartyCode));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.Int);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnySelectOne<T>(arrParams, SP_Name);
+        }
+        public Int64 PublishNotice(NoticeMaster_NM TEntity, string SP_Name)
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType",
+                TEntity.NM_IsPublish ? "PUBLISH" : "UNPUBLISH"));
+
+            arrParams.Add(new SqlParameter("@NM_Id", TEntity.NM_Id));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.BigInt);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.InsertAnyMasters(arrParams, SP_Name, OutPutId);
+        }
+        public List<T> GetParaByArea<T>(ParaMaster_PM TEntity, string SP_Name)
+    where T : class, new()
+        {
+            List<SqlParameter> arrParams = new List<SqlParameter>();
+
+            arrParams.Add(new SqlParameter("@TransType", "GETPARABYAREA"));
+            arrParams.Add(new SqlParameter("@AreaId", TEntity.AM_AreaCode));
+
+            SqlParameter OutPutId = new SqlParameter("@OutPutId", SqlDbType.BigInt);
+            OutPutId.Direction = ParameterDirection.Output;
+            arrParams.Add(OutPutId);
+
+            return common.GetAnyList<T>(arrParams, SP_Name);
+        }
+        #endregion
     }
 }
 

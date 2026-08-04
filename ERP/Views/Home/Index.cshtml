@@ -319,7 +319,8 @@
 
         <!-- Water Tax -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-water">
+            <div class="dashboard-card card-water"
+                 onclick="window.location='@Url.Action("WaterTaxCollection","Transaction")';"style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Water Tax Collection</h6>
@@ -336,7 +337,7 @@
 
         <!-- Beneficiary -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-beneficiary">
+            <div class="dashboard-card card-beneficiary"  onclick="window.location='@Url.Action("BeneficiaryConnection","Master")';"style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Beneficiary Connection</h6>
@@ -353,7 +354,7 @@
 
         <!-- Reconnection -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-reconnection">
+            <div class="dashboard-card card-reconnection"  onclick="window.location='@Url.Action("ReConnection","Transaction")';"style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Repairing / Reconnection</h6>
@@ -370,7 +371,7 @@
 
         <!-- Form Sales -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-form">
+            <div class="dashboard-card card-form" onclick="window.location='@Url.Action("FormSales","Transaction")';"style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Form Sales</h6>
@@ -387,7 +388,7 @@
 
         <!-- Materials -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-material">
+            <div class="dashboard-card card-material" onclick="window.location='@Url.Action("ConsumerInvoice","Transaction")';"style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Materials Charge</h6>
@@ -403,7 +404,7 @@
         </div>
 
         <!-- Ferrule -->
-        <div class="dashboard-col">
+        <div class="dashboard-col" onclick="window.location='@Url.Action("FerrulCharge","Transaction")';" style="cursor:pointer;">
             <div class="dashboard-card card-ferrule">
                 <div class="card-body">
                     <div>
@@ -421,7 +422,7 @@
 
         <!-- Caution Money -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-caution">
+            <div class="dashboard-card card-caution" onclick="window.location='@Url.Action("FerrulCharge","Transaction")';" style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Caution Money</h6>
@@ -437,7 +438,7 @@
         </div>
         <!-- Van Booking Money -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-van">
+            <div class="dashboard-card card-van" onclick="window.location='@Url.Action("Vanbooking","Transaction")';" style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Van Booking</h6>
@@ -453,7 +454,7 @@
         </div>
         <!-- Tank Booking Money -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-tank">
+            <div class="dashboard-card card-tank" onclick="window.location='@Url.Action("Tankbooking","Transaction")';" style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Tank Booking</h6>
@@ -469,7 +470,7 @@
         </div>
         <!-- Total -->
         <div class="dashboard-col">
-            <div class="dashboard-card card-total">
+            <div class="dashboard-card card-total" onclick="window.location='@Url.Action("CollectionRegister","Report")';" style="cursor:pointer;">
                 <div class="card-body">
                     <div>
                         <h6>Total Collection</h6>

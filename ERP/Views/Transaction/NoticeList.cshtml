@@ -1,0 +1,170 @@
+﻿@model IEnumerable<BObject.NoticeMaster_NM>
+
+@{
+    ViewBag.Title = "Notice List";
+}
+
+<div class="card">
+
+    <div class="card-header bg-primary text-white">
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <h4>Notice List</h4>
+            </div>
+
+            <div class="col-md-6 text-right" style="margin-left: 94%; margin-top: -40px; ">
+
+                <a href="/Transaction/Notice"
+                   class="btn btn-success">
+
+                    <i class="fa fa-plus"></i>
+
+                    Add New
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped table-hover" id="tblNotice">
+
+            <thead class="thead-dark">
+
+                <tr>
+
+                    <th>SL</th>
+
+                    <th>Notice Code</th>
+
+                    <th>Type</th>
+
+                    <th>Notice For</th>
+
+                    <th>Title</th>
+
+                    <th>From</th>
+
+                    <th>To</th>
+
+                    <th>Publish</th>
+
+                    <th>Attachment</th>
+
+                    <th width="120">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @{
+                    int sl = 1;
+                }
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@sl</td>
+
+                        <td>@item.NM_Code</td>
+
+                        <td>@item.NT_Name</td>
+
+                        <td>@item.NoticeFor</td>
+
+                        <td>@item.NM_Title</td>
+
+                        <td>@Convert.ToDateTime(item.NM_FromDate).ToString("dd-MM-yyyy")</td>
+                        <td>@Convert.ToDateTime(item.NM_ToDate).ToString("dd-MM-yyyy")</td>
+
+
+                        <td>
+
+                            @if (item.NM_IsPublish)
+                            {
+                                <span class="badge badge-success">
+                                    Published
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">
+                                    Draft
+                                </span>
+                            }
+
+                        </td>
+
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.NM_UploadFile))
+                            {
+                                <a href="@Url.Content(item.NM_UploadFile)"
+                                   target="_blank"
+                                   class="btn btn-info btn-sm">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-danger">No File</span>
+                            }
+                        </td>
+
+
+
+                        <td>
+
+                            @*<a href="/Transaction/Notice/@item.NM_Id"
+                               class="btn btn-warning btn-sm">
+
+                                <i class="fa fa-edit"></i>
+
+                            </a>*@
+
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="DeleteNotice(@item.NM_Id)">
+
+                                <i class="fa fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    sl++;
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+@section scripts{
+
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
+
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/AppScript/Notice.js"></script>
+
+    <script>
+        $(function () {
+            $('#tblNotice').DataTable();
+        });
+    </script>
+
+}

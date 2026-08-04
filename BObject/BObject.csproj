@@ -122,8 +122,11 @@
     <Compile Include="BENECONTRI.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="company.cs" />
+    <Compile Include="ComplaintHistory_CH.cs" />
+    <Compile Include="ComplaintMaster_CM.cs" />
     <Compile Include="CUSTDETAIL.cs" />
     <Compile Include="CUSTMASTER.cs" />
+    <Compile Include="DashboardModel.cs" />
     <Compile Include="ferrulMaster.cs" />
     <Compile Include="fMaster.cs" />
     <Compile Include="FORMSALE.cs" />
@@ -136,6 +139,8 @@
     <Compile Include="Master_Rate.cs" />
     <Compile Include="MATERIAL.cs" />
     <Compile Include="MenuRelatedModel.cs" />
+    <Compile Include="NoticeMaster_NM.cs" />
+    <Compile Include="NoticeType_NT.cs" />
     <Compile Include="ParaMaster_PM.cs" />
     <Compile Include="PartyLedger_PL.cs" />
     <Compile Include="PartyMaster_PM.cs" />

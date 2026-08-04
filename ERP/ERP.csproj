@@ -225,23 +225,34 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\API\Controller\ComplaintController.cs" />
     <Compile Include="Areas\API\Controller\DashboardController.cs" />
+    <Compile Include="Areas\API\Controller\NoticeController.cs" />
     <Compile Include="Areas\API\Controller\PartyLoginController.cs" />
+    <Compile Include="Areas\API\Controller\PaymentController.cs" />
     <Compile Include="Areas\API\Controller\ReceiptController.cs" />
+    <Compile Include="Areas\API\DAL\ComplaintDAL.cs" />
     <Compile Include="Areas\API\DAL\DashboardDAL.cs" />
+    <Compile Include="Areas\API\DAL\NoticeDAL.cs" />
     <Compile Include="Areas\API\DAL\PartyLoginDAL.cs" />
+    <Compile Include="Areas\API\DAL\PaymentDAL.cs" />
     <Compile Include="Areas\API\DAL\ReceiptDAL.cs" />
     <Compile Include="Areas\API\Helper\SMSHelper.cs" />
     <Compile Include="Areas\API\Helper\TokenManagerController.cs" />
+    <Compile Include="Areas\API\Model\Request\ComplaintRequest.cs" />
     <Compile Include="Areas\API\Model\Request\CreatePasswordRequest.cs" />
     <Compile Include="Areas\API\Model\Request\DashboardRequest.cs" />
     <Compile Include="Areas\API\Model\Request\LoginRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\NoticeRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\PaymentRequest.cs" />
     <Compile Include="Areas\API\Model\Request\ReceiptDetailsRequest.cs" />
     <Compile Include="Areas\API\Model\Request\ReceiptRequest.cs" />
     <Compile Include="Areas\API\Model\Request\SendOTPRequest.cs" />
+    <Compile Include="Areas\API\Model\Request\UpdatePasswordRequest.cs" />
     <Compile Include="Areas\API\Model\Request\VerifyOTPRequest.cs" />
     <Compile Include="Areas\API\Model\Request\VerifyPartyRequest.cs" />
     <Compile Include="Areas\API\Model\Response\ApiResponse.cs" />
+    <Compile Include="Areas\API\Model\Response\NoticeResponse.cs" />
     <Compile Include="Beneficary Register.aspx.cs">
       <DependentUpon>Beneficary Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -463,6 +474,10 @@
   <ItemGroup>
     <Content Include="Beneficary Register.aspx" />
     <Content Include="CollectionRegister.aspx" />
+    <Content Include="Scripts\AppScript\DashBoard.js" />
+    <Content Include="Scripts\AppScript\InspectorMaster.js" />
+    <Content Include="Scripts\AppScript\Inspectors.js" />
+    <Content Include="Scripts\AppScript\Notice.js" />
     <Content Include="Scripts\jquery-latest_export_excel.min.js" />
     <Content Include="VoucherEntryReport.aspx" />
     <Content Include="VoucherPrint.aspx" />
@@ -1315,12 +1330,20 @@
     <Content Include="Views\AccountReport\ReceiptPaymentReport.cshtml" />
     <Content Include="Views\AccountReport\ReportIncomeExpenceReport.cshtml" />
     <Content Include="Views\AccountReport\VoucherEntryReport.cshtml" />
+    <Content Include="Views\Transaction\ComplaintList.cshtml" />
+    <Content Include="Views\Transaction\ComplaintEdit.cshtml" />
+    <Content Include="Views\Transaction\ComplaintDeatilsById.cshtml" />
+    <Content Include="Views\Transaction\_ComplaintHistory.cshtml" />
+    <Content Include="Views\Transaction\Notice.cshtml" />
+    <Content Include="Views\Transaction\NoticeList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\API\Views\Payment\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Document\Img\Company\" />
     <Folder Include="Image\" />
+    <Folder Include="Uploads\Notice\" />
     <Folder Include="Views\JQuery\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
