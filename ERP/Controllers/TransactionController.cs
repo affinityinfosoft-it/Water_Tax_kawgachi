@@ -529,7 +529,7 @@ namespace ERP.Controllers
             return View(VanBooking_VB);
         }
         #endregion
-
+        //add by uttaran 01/08/2026(api implementation Area)
         #region COMPLAIN MANAGEMENT
         public ActionResult ComplaintList()
         {
@@ -599,6 +599,38 @@ namespace ERP.Controllers
         }
         #endregion
         #region NOTICE MASTER
+        public ActionResult Notice(long? Id)
+        {
+            //if (UserModel == null)
+            //    return returnLogin("~/Transaction/Notice");
+            //GetRights("/Transaction/NoticeList");
+            NoticeMaster_NM notice = new NoticeMaster_NM();
+            var NoticeTypeList = service.GetGlobalSelect<NoticeType_NT>("NoticeType_NT", "NT_Name", null);
+            var AreaList = service.GetGlobalSelect<AreaMaster_AM>("AreaMaster_AM", "AM_AreaName", null);
+            var ParaList = service.GetGlobalSelect<ParaMaster_PM>("ParaMaster_PM", "PM_ParaName", null);
+            if (Id != null)
+            {
+                notice = service.GetGlobalSelectOne<NoticeMaster_NM>("NoticeMaster_NM", "NM_Id", Id);
+
+                ViewBag.Button = "UPDATE";
+            }
+            else
+            {
+                ViewBag.Button = "SUBMIT";
+            }
+            ViewBag.NM_NT_Id = new SelectList(NoticeTypeList, "NT_Id", "NT_Name");
+            ViewBag.NM_AreaId = new SelectList(AreaList, "AM_AreaID", "AM_AreaName");
+            ViewBag.NM_ParaId = new SelectList(ParaList, "PM_ParaId", "PM_ParaName");
+            return View(notice);
+        }
+        public ActionResult NoticeList()
+        {
+            var list = service.GetNotice<NoticeMaster_NM>(
+                new NoticeMaster_NM(),
+                "SP_NoticeMaster_NM");
+
+            return View(list);
+        }
         #endregion
 
     }

@@ -2,6 +2,7 @@
 using ERP.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -2295,6 +2296,205 @@ namespace ERP.Controllers
                 status.Result = -1;
             }
             return Json(status, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region NoticeMaster
+        public JsonResult GetConsumerForNotice(string PartyCode)
+        {
+            StatusResponse status = new StatusResponse();
+            try
+            {
+                NoticeMaster_NM notice = new NoticeMaster_NM();
+                notice.NM_PartyCode = PartyCode;
+
+                var ConsumerDetails = service.GetConsumerDetailsssGet<NoticeMaster_NM>(
+      new PartyLedger_PL { PM_PartyCode = PartyCode },
+      "SP_NoticeMaster_NM"
+  );
+
+              
+
+                if (ConsumerDetails != null)
+                {
+                    status.IsSuccess = true;
+
+                    return Json(new
+                    {
+                        IsSuccess = true,
+                        ConsumerDetails = ConsumerDetails
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        IsSuccess = false,
+                        Message = "Consumer not found!"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult InsUpNotice(NoticeMaster_NM TEntity, HttpPostedFileBase NoticeFile)
+        {
+            StatusResponse status = new StatusResponse();
+
+            try
+            {
+                if (NoticeFile != null && NoticeFile.ContentLength > 0)
+                {
+                    string folder = Server.MapPath("~/Uploads/Notice/");
+
+                    if (!Directory.Exists(folder))
+                        Directory.CreateDirectory(folder);
+
+                    string fileName = Guid.NewGuid().ToString()
+                                    + Path.GetExtension(NoticeFile.FileName);
+
+                    string fullPath = Path.Combine(folder, fileName);
+
+                    NoticeFile.SaveAs(fullPath);
+
+                    TEntity.NM_UploadFile = "/Uploads/Notice/" + fileName;
+                }
+
+                if (TEntity.NM_Id == 0)
+                    TEntity.NM_CreatedBy = UserModel.UserId;
+                else
+                    TEntity.NM_EditedBy = UserModel.UserId;
+
+                long result = service.InsUpNotice(TEntity, "SP_NoticeMaster_NM");
+
+                if (result > 0)
+                {
+                    status.IsSuccess = true;
+                    status.Message = TEntity.NM_Id == 0
+                        ? "Notice Saved Successfully."
+                        : "Notice Updated Successfully.";
+                }
+                else
+                {
+                    status.IsSuccess = false;
+                    status.Message = "Operation Failed.";
+                }
+            }
+            catch (Exception ex)
+            {
+                status.IsSuccess = false;
+                status.Message = ex.Message;
+            }
+
+            return Json(status);
+        }
+        public JsonResult DeleteNotice(NoticeMaster_NM TEntity)
+        {
+            StatusResponse status = new StatusResponse();
+
+            try
+            {
+                if (TEntity.NM_Id != 0)
+                {
+                    var result = service.GlobalDelete(
+                        "NoticeMaster_NM",
+                        "NM_Id",
+                        TEntity.NM_Id,
+                        null,
+                        null);
+
+                    if (result > 0)
+                    {
+                        status.IsSuccess = true;
+                        status.Result = result;
+                        status.Message = "Notice Deleted Successfully.";
+                    }
+                    else
+                    {
+                        status.IsSuccess = false;
+                        status.Message = "Delete Failed.";
+                    }
+                }
+                else
+                {
+                    status.IsSuccess = false;
+                    status.Message = "Invalid Notice.";
+                }
+            }
+            catch (Exception ex)
+            {
+                status.IsSuccess = false;
+                status.Message = ex.Message;
+            }
+
+            return Json(status, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult PublishNotice(long NM_Id, bool Publish)
+        {
+            StatusResponse status = new StatusResponse();
+
+            try
+            {
+                NoticeMaster_NM obj = new NoticeMaster_NM();
+
+                obj.NM_Id = NM_Id;
+                obj.NM_IsPublish = Publish;
+
+                var result = service.PublishNotice(obj, "SP_NoticeMaster_NM");
+
+                if (result > 0)
+                {
+                    status.IsSuccess = true;
+                    status.Message = Publish
+                        ? "Notice Published Successfully."
+                        : "Notice Unpublished Successfully.";
+                }
+                else
+                {
+                    status.IsSuccess = false;
+                    status.Message = "Operation Failed.";
+                }
+            }
+            catch (Exception ex)
+            {
+                status.IsSuccess = false;
+                status.Message = ex.Message;
+            }
+
+            return Json(status, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetParaByArea(long AreaId)
+        {
+            try
+            {
+                var list = service.GetParaByArea<ParaMaster_PM>(
+                    new ParaMaster_PM
+                    {
+                        AM_AreaCode = AreaId
+                    },
+                    "SP_NoticeMaster_NM");
+
+                return Json(new
+                {
+                    IsSuccess = true,
+                    Data = list
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    IsSuccess = false,
+                    Message = ex.ToString()   // <-- use ToString()
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
         #endregion
         #endregion
