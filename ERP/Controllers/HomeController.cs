@@ -53,5 +53,10 @@ namespace ERP.Controllers
 
             return View();
         }
+
+        public ActionResult PrivacyPolicy()
+        {
+            return View();
+        }
     }
 }
